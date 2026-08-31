@@ -5,12 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resources | White Rabbit Security</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        :root {
+            --bg-color: #060b13; 
+            --nav-bg: #0a111a;
+            --card-bg: #0d1522;
+            --accent-cyan: #00e5ff;
+            --accent-glow: rgba(0, 229, 255, 0.4);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border-color: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            background-image: 
+                linear-gradient(to bottom, rgba(6, 11, 19, 0.9), rgba(6, 11, 19, 1)),
+                url('https://www.transparenttextures.com/patterns/cubes.png');
+        }
+
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 5%; background-color: rgba(10, 17, 26, 0.8);
+            backdrop-filter: blur(10px); border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: bold; font-size: 1.2rem; color: var(--accent-cyan); text-decoration: none; }
+        .nav-logo img { height: 40px; border-radius: 5px; }
+
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; transition: color 0.3s; }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-cyan); text-shadow: 0 0 8px var(--accent-glow); }
+
+        .hero { text-align: center; padding: 60px 20px 20px; max-width: 1000px; margin: 0 auto; }
+        .hero h1 { font-size: 3rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        .hero h1 .highlight { color: var(--accent-cyan); text-shadow: 0 0 15px var(--accent-glow); display: inline-block; }
+        .hero p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 30px; }
+
+        .services { padding: 20px 5% 60px; max-width: 1200px; margin: 0 auto; }
+        .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 2rem; }
+        
+        /* Fixed styling to allow links to act as structural cards */
+        .service-card { 
+            background-color: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 12px; 
+            padding: 30px; 
+            transition: all 0.3s ease; 
+            display: block; 
+            text-decoration: none; 
+            color: inherit; 
+        }
+        .service-card:hover { border-color: var(--accent-cyan); box-shadow: 0 10px 30px rgba(0, 229, 255, 0.1); transform: translateY(-5px); cursor: pointer; }
+        
+        .service-icon { font-size: 1.8rem; color: var(--text-muted); margin-bottom: 20px; background: rgba(255, 255, 255, 0.05); width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 10px; transition: color 0.3s; }
+        .service-card:hover .service-icon { color: var(--accent-cyan); }
+        .service-card h3 { font-size: 1.4rem; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .service-card h3 .highlight { color: var(--accent-cyan); display: inline-block; }
+        .service-card p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; margin-bottom: 20px;}
+
+        @media (max-width: 900px) { 
+            nav { padding: 15px 3%; }
+            .nav-links { display: flex; gap: 12px; } 
+            .nav-links a { font-size: 0.7rem; letter-spacing: 0.5px; }
+            .hero h1 { font-size: 2rem; } 
+        }
+    </style>
 </head>
 <body>
     <nav>
         <div class="nav-logo">
-            <img src="/Gemini_Generated_Image_xgu7hpxgu7hpxgu7~2.jpg" alt="W.R.S Logo" style="height: 40px; border-radius: 5px;">
+            <img src="/Gemini_Generated_Image_xgu7hpxgu7hpxgu7~2.jpg" alt="W.R.S Logo">
         </div>
         <div class="nav-links">
             <a href="/">Home</a>
