@@ -22,33 +22,67 @@
 
     <header class="hero">
         <h1>Intelligence <span class="highlight">Feed</span></h1>
-        <p>Live global telemetry, threat advisories, and monitoring uplinks.</p>
+        <p>Live global telemetry, threat advisories, and real-time Hacker News wire.</p>
     </header>
 
     <section class="services">
-        <div style="text-align: center; padding: 50px 20px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.1);">
-    <div style="font-size: 2.5rem; color: var(--accent-cyan); margin-bottom: 20px;">
-        <i class="fa-solid fa-earth-americas"></i>
-    </div>
-    <h2 style="font-size: 1.8rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px;">World Monitor <span class="highlight">Uplink</span></h2>
-    <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 25px;">Access real-time global telemetry, maritime tracking, and geopolitical threat feeds through the external monitoring node.</p>
-    <a href="https://www.worldmonitor.app" target="_blank" class="btn btn-primary">Launch World Monitor</a>
-        </div>
-        
-
-        <div class="services-grid">
-            <div class="service-card" style="cursor: default;">
-                <p style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">LIVE FEED</p>
-                <h3>Global <span class="highlight">Telemetry</span></h3>
-                <p>Tracking live geopolitical signals, maritime movement, and cyber disruption metrics via World Monitor.</p>
+        <!-- World Monitor Gateway -->
+        <div style="text-align: center; padding: 40px 20px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.1);">
+            <div style="font-size: 2.2rem; color: var(--accent-cyan); margin-bottom: 15px;">
+                <i class="fa-solid fa-earth-americas"></i>
             </div>
-            
-            <div class="service-card" style="cursor: default;">
-                <p style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;">ADVISORY</p>
-                <h3>Infrastructure <span class="highlight">Defense</span></h3>
-                <p>Maintaining high-alert parameters across localized assets against automated attack vectors.</p>
+            <h2 style="font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">World Monitor <span class="highlight">Uplink</span></h2>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px; font-size: 0.95rem;">Access real-time global telemetry and geopolitical threat tracking.</p>
+            <a href="https://www.worldmonitor.app" target="_blank" class="btn btn-primary">Launch World Monitor</a>
+        </div>
+
+        <!-- Hacker News Real-Time Section -->
+        <h2 style="text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem;">Hacker <span class="highlight">News Wire</span></h2>
+        
+        <div id="hn-feed" class="services-grid">
+            <div class="service-card" style="grid-column: 1 / -1; text-align: center; cursor: default;">
+                <p style="color: var(--text-muted);">Fetching live intelligence payloads from Hacker News...</p>
             </div>
         </div>
     </section>
+
+    <script>
+        async function fetchHackerNews() {
+            try {
+                const topStoriesRes = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
+                const storyIds = await topStoriesRes.json();
+                const feedContainer = document.getElementById('hn-feed');
+                feedContainer.innerHTML = '';
+
+                // Fetch the top 6 stories
+                for (let i = 0; i < 6; i++) {
+                    const storyRes = await fetch(`https://hacker-news.firebaseio.com/v0/item/${storyIds[i]}.json`);
+                    const story = await storyRes.json();
+                    
+                    if (story && story.title) {
+                        const card = document.createElement('a');
+                        card.href = story.url || `https://news.ycombinator.com/item?id=${story.id}`;
+                        card.target = '_blank';
+                        card.className = 'service-card';
+                        card.style.textDecoration = 'none';
+                        card.style.display = 'block';
+
+                        card.innerHTML = `
+                            <p style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;"><i class="fa-solid fa-bolt"></i> SCORE: ${story.score || 0}</p>
+                            <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--text-main);">${story.title}</h3>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">Source: ${story.url ? new URL(story.url).hostname : 'ycombinator.com'}</p>
+                        `;
+                        feedContainer.appendChild(card);
+                    }
+                }
+            } catch (error) {
+                document.getElementById('hn-feed').innerHTML = `
+                    <div class="service-card" style="grid-column: 1 / -1; text-align: center; cursor: default;">
+                        <p style="color: #ff3333;">Failed to establish telemetry link with Hacker News wire.</p>
+                    </div>`;
+            }
+        }
+        fetchHackerNews();
+    </script>
 </body>
 </html>
