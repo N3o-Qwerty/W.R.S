@@ -1,0 +1,20 @@
+/* Services Grid Layout */
+.services-container { max-width: 1200px; margin: 0 auto; padding: 2rem; font-family: monospace; }
+.section-header { text-align: center; margin-bottom: 3rem; }
+.service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+.service-card { border: 1px solid #333; padding: 2rem; background: #0a0a0a; color: #f4f4f4; transition: transform 0.2s ease; }
+.service-card:hover { transform: translateY(-5px); border-color: #00ff00; }
+.service-card h2 { margin-top: 0; font-size: 1.5rem; }
+.card-link { display: inline-block; margin-top: 1.5rem; color: #00ff00; text-decoration: none; font-weight: bold; }
+.card-link:hover { text-decoration: underline; }
+
+/* Contact Form Styles */
+.contact-container { max-width: 800px; margin: 0 auto; padding: 2rem; font-family: monospace; }
+.secure-form { background: #0a0a0a; padding: 2.5rem; border: 1px solid #333; border-radius: 4px; }
+.form-group { margin-bottom: 1.5rem; }
+.form-group label { display: block; margin-bottom: 0.5rem; color: #f4f4f4; font-weight: bold; }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; background: #111; border: 1px solid #444; color: #00ff00; font-family: monospace; font-size: 1rem; box-sizing: border-box; }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: #00ff00; }
+.submit-btn { width: 100%; padding: 1rem; background: #00ff00; color: #000; border: none; font-weight: bold; font-size: 1.2rem; cursor: pointer; font-family: monospace; margin-top: 1rem; transition: background 0.2s ease; }
+.submit-btn:hover { background: #00cc00; }
+.cf-turnstile { margin-bottom: 1.5rem; }
