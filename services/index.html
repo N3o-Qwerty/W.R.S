@@ -1,36 +1,46 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';">
-    <title>Explore Services | White Rabbit Security</title>
+    <title>Services | White Rabbit Security</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <nav class="main-nav"><a href="/">[ Home ]</a> <a href="/contact/" class="cta-button">[ GET SECURE ]</a></nav>
-    <main class="services-container">
-        <header class="section-header">
-            <h1>Core Capabilities</h1>
-            <p>Select a service below to view detailed capabilities, deliverables, and intake procedures.</p>
-        </header>
-        <div class="service-grid">
+    <nav>
+        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/" class="active">Services</a>
+            <a href="/contact/">Contact</a>
+        </div>
+    </nav>
+    <header class="hero">
+        <h1>Core <span class="highlight">Capabilities</span></h1>
+        <p>Select a service below to view deep technical capabilities.</p>
+    </header>
+    <section class="services">
+        <div class="services-grid">
             <div class="service-card">
-                <h2>Hardware Repair & Fabrication</h2>
-                <p>Component-level diagnostics, micro-soldering, custom modifications, and deep hardware recovery.</p>
-                <a href="/services/hardware-repair/" class="card-link">View Hardware Specs &rarr;</a>
+                <div class="service-icon"><i class="fa-solid fa-wrench"></i></div>
+                <h3>Hardware <span class="highlight">Repair</span></h3>
+                <p>Component-level diagnostics, custom fabrication, and legacy system restoration.</p>
+                <a href="/services/hardware-repair/" class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</a>
             </div>
             <div class="service-card">
-                <h2>Data Recovery</h2>
-                <p>Strictly confidential logical and physical extraction for failing drives, corrupted arrays, and damaged media.</p>
-                <a href="/services/data-recovery/" class="card-link">View Recovery Process &rarr;</a>
+                <div class="service-icon"><i class="fa-solid fa-hard-drive"></i></div>
+                <h3>Data <span class="highlight">Recovery</span></h3>
+                <p>Secure data extraction for failing drives, corrupted arrays, and damaged media.</p>
+                <a href="/services/data-recovery/" class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</a>
             </div>
             <div class="service-card">
-                <h2>Infosec Audits</h2>
-                <p>Offensive security assessments, vulnerability mapping, and network hardening for business and custom infrastructure.</p>
-                <a href="/services/infosec-audits/" class="card-link">View Audit Scope &rarr;</a>
+                <div class="service-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>InfoSec <span class="highlight">Audits</span></h3>
+                <p>Offensive security assessments, vulnerability mapping, and infrastructure hardening.</p>
+                <a href="/services/infosec-audits/" class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</a>
             </div>
         </div>
-    </main>
+    </section>
 </body>
 </html>

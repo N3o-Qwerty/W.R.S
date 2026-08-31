@@ -1,41 +1,37 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';">
-    <title>Infosec Audits | White Rabbit Security</title>
-    <meta name="description" content="Offensive security assessments, penetration testing, and infrastructure hardening.">
+    <title>Infosec Audits | W.R.S</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-
-    <nav class="main-nav">
-        <a href="/">[ Home ]</a>
-        <a href="/services/">[ Explore Services ]</a>
-        <a href="/contact/" class="cta-button">[ GET SECURE ]</a>
+    <nav>
+        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/" class="active">Services</a>
+            <a href="/contact/">Contact</a>
+        </div>
     </nav>
-
-    <main class="services-container">
-        <header class="section-header">
-            <h1>Infosec Audits & Penetration Testing</h1>
-            <p>Proactive vulnerability discovery and offensive security assessments for modern infrastructure.</p>
-        </header>
-
-        <div class="service-card" style="margin-bottom: 2rem;">
-            <h2>Audit Scope & Deliverables</h2>
-            <ul style="line-height: 1.8; margin-top: 1rem;">
-                <li><strong>Offensive Security Testing:</strong> Simulated adversarial attacks to identify exploitable vulnerabilities in your network perimeter and internal systems.</li>
-                <li><strong>AI & Custom Application Security:</strong> Specialized vulnerability mapping for bespoke applications, machine learning environments, and interactive laboratory deployments.</li>
-                <li><strong>Infrastructure Hardening:</strong> Comprehensive review of network configurations, firewall routing, and endpoint security protocols.</li>
-                <li><strong>Actionable Remediation:</strong> You receive a prioritized risk matrix and a concrete, step-by-step technical roadmap to patch identified attack vectors.</li>
+    <header class="hero">
+        <h1>InfoSec <span class="highlight">Audits</span></h1>
+        <p>Offensive vulnerability discovery and adversarial simulations.</p>
+    </header>
+    <section class="services">
+        <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px;">
+                <li><i class="fa-solid fa-skull-crossbones" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Offensive Security Testing:</strong> Simulated attacks mapping internal/external network vulnerabilities.</li>
+                <li><i class="fa-solid fa-network-wired" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Application & AI Security:</strong> Assessing custom ML deployments and bespoke infrastructure.</li>
+                <li><i class="fa-solid fa-shield-virus" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Infrastructure Hardening:</strong> Defensive configuration of firewalls, endpoint protocols, and routing.</li>
+                <li><i class="fa-solid fa-clipboard-check" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Actionable Remediation:</strong> You receive a concrete, prioritized roadmap to patch critical attack vectors.</li>
             </ul>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="/contact/" class="btn btn-primary">Schedule Audit</a>
+            </div>
         </div>
-
-        <div style="text-align: center; margin-top: 3rem;">
-            <a href="/contact/" class="submit-btn" style="display: inline-block; width: auto; text-decoration: none; padding: 1rem 2rem;">REQUEST SECURITY AUDIT &rarr;</a>
-        </div>
-    </main>
-
+    </section>
 </body>
 </html>

@@ -1,41 +1,37 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';">
-    <title>Data Recovery | White Rabbit Security</title>
-    <meta name="description" content="Secure data extraction for failing drives, corrupted arrays, and damaged media.">
+    <title>Data Recovery | W.R.S</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-
-    <nav class="main-nav">
-        <a href="/">[ Home ]</a>
-        <a href="/services/">[ Explore Services ]</a>
-        <a href="/contact/" class="cta-button">[ GET SECURE ]</a>
+    <nav>
+        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/" class="active">Services</a>
+            <a href="/contact/">Contact</a>
+        </div>
     </nav>
-
-    <main class="services-container">
-        <header class="section-header">
-            <h1>Data Recovery Services</h1>
-            <p style="color: #ff3333; font-weight: bold;">CRITICAL: If you suspect drive failure, power down the device immediately to prevent further data loss.</p>
-        </header>
-
-        <div class="service-card" style="margin-bottom: 2rem;">
-            <h2>Recovery Scenarios & Capabilities</h2>
-            <ul style="line-height: 1.8; margin-top: 1rem;">
-                <li><strong>Supported Media:</strong> HDDs, SSDs, NVMe drives, RAID arrays, USB flash media, and legacy storage formats.</li>
-                <li><strong>Logical Recovery:</strong> Restoration of accidentally deleted files, corrupted partitions, and damaged file systems.</li>
-                <li><strong>Physical Recovery:</strong> Extraction from drives suffering from mechanical failure, electrical damage, or firmware corruption.</li>
-                <li><strong>Confidentiality Guarantee:</strong> All recovered data is handled under strict privacy protocols. No unauthorized access or duplication.</li>
+    <header class="hero">
+        <h1>Data <span class="highlight">Recovery</span></h1>
+        <p style="color: #ff3333; font-weight: bold;">CRITICAL: Power down failing devices immediately.</p>
+    </header>
+    <section class="services">
+        <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+            <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px;">
+                <li><i class="fa-solid fa-server" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Supported Media:</strong> NVMe, SSDs, legacy HDDs, and corrupted RAID arrays.</li>
+                <li><i class="fa-solid fa-file-circle-exclamation" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Logical Recovery:</strong> Restoration of damaged partitions and file systems.</li>
+                <li><i class="fa-solid fa-hammer" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Physical Recovery:</strong> Extraction from drives with mechanical or firmware failures.</li>
+                <li><i class="fa-solid fa-lock" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Strict Confidentiality:</strong> Handled under absolute privacy protocols. Zero unauthorized duplication.</li>
             </ul>
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="/contact/" class="btn btn-primary">Request Extraction</a>
+            </div>
         </div>
-
-        <div style="text-align: center; margin-top: 3rem;">
-            <a href="/contact/" class="submit-btn" style="display: inline-block; width: auto; text-decoration: none; padding: 1rem 2rem;">INITIATE RECOVERY INTAKE &rarr;</a>
-        </div>
-    </main>
-
+    </section>
 </body>
 </html>

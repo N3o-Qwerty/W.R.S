@@ -1,37 +1,53 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com;">
-    <title>GET SECURE | White Rabbit Security</title>
+    <title>Contact | W.R.S</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
-    <nav class="main-nav"><a href="/">[ Home ]</a> <a href="/services/">[ Explore Services ]</a></nav>
-    <main class="contact-container">
-        <header class="section-header">
-            <h1>Initiate Contact</h1>
-            <p>Provide details about your hardware, data, or security requirements. Communications are strictly confidential.</p>
-        </header>
+    <nav>
+        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/contact/" class="active">Contact</a>
+        </div>
+    </nav>
+    <header class="hero">
+        <h1>Secure <span class="highlight">Intake</span></h1>
+        <p>Submit your operational requirements below.</p>
+    </header>
+    <section class="services">
+        <!-- Be sure your Formspree ID is updated in the action URL -->
         <form action="https://formspree.io/f/mgaeooll" method="POST" class="secure-form">
-            <div class="form-group"><label>Alias / Name *</label><input type="text" name="name" required></div>
-            <div class="form-group"><label>Secure Email or Phone *</label><input type="text" name="contact" required></div>
             <div class="form-group">
-                <label>Required Service *</label>
-                <select name="service-type" required>
-                    <option value="">-- Select Objective --</option>
-                    <option value="hardware-repair">Hardware Repair & Fabrication</option>
-                    <option value="data-recovery">Data Recovery</option>
-                    <option value="infosec-audit">Offensive Security Audit</option>
-                    <option value="other">Other</option>
+                <label>Identifier (Name)</label>
+                <input type="text" name="name" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Comms Routing (Email)</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Operational Domain</label>
+                <select name="service" class="form-control" required>
+                    <option value="" disabled selected>Select an objective...</option>
+                    <option value="Hardware">Hardware Repair / Fabrication</option>
+                    <option value="Data">Data Recovery</option>
+                    <option value="Infosec">InfoSec Audit / Pentest</option>
+                    <option value="Other">Other Protocol</option>
                 </select>
             </div>
-            <div class="form-group"><label>System Details & Objectives *</label><textarea name="details" rows="6" required></textarea></div>
-            <div class="cf-turnstile" data-sitekey="0x4AAAAAAEiZO1HFW-StlVeR"></div>
-            <button type="submit" class="submit-btn">TRANSMIT REQUEST</button>
+            <div class="form-group">
+                <label>Mission Brief (Details)</label>
+                <textarea name="message" class="form-control" required></textarea>
+            </div>
+            <div class="cf-turnstile" data-sitekey="YOUR_CLOUDFLARE_SITEKEY"></div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Transmit Payload</button>
         </form>
-    </main>
+    </section>
 </body>
 </html>
