@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InfoSec Audits | W.R.S</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>InfoSec Audits | White Rabbit Security</title>
+    <meta name="description" content="Authorized security audits of networks, web applications, wireless, and AI deployments, with a prioritized report and retest.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/services/infosec-audits/">
+    <link rel="icon" href="/wrs.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="/wrs.jpg">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="InfoSec Audits | White Rabbit Security">
+    <meta property="og:description" content="Authorized security audits of networks, web applications, wireless, and AI deployments, with a prioritized report and retest.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/services/infosec-audits/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="InfoSec Audits | White Rabbit Security">
+    <meta name="twitter:description" content="Authorized security audits of networks, web applications, wireless, and AI deployments, with a prioritized report and retest.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <nav>
-        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <a href="/" class="nav-logo">
+            <img src="/wrs.jpg" alt="White Rabbit Security">
+        </a>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/services/" class="active" aria-current="page">Services</a>
@@ -18,24 +38,113 @@
             <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <main>
+    <main id="main" tabindex="-1">
         <header class="hero">
             <h1>InfoSec <span class="highlight">Audits</span></h1>
-            <p>Offensive vulnerability discovery and adversarial simulations.</p>
+            <p>Authorized security assessments for the systems you designate. We explain the risk in plain language and leave you with a prioritized way to fix it.</p>
+            <div class="hero-buttons">
+                <a href="/contact/?service=Infosec" class="btn btn-primary">Schedule Audit</a>
+            </div>
         </header>
-        <section class="services">
-            <div class="service-card" style="max-width: 800px; margin: 0 auto;">
-                <ul class="spec-list">
-                    <li><i class="fa-solid fa-skull-crossbones"></i> <strong>Offensive Security Testing:</strong> Simulated attacks mapping internal/external network vulnerabilities.</li>
-                    <li><i class="fa-solid fa-network-wired"></i> <strong>Application &amp; AI Security:</strong> Assessing custom ML deployments and bespoke infrastructure.</li>
-                    <li><i class="fa-solid fa-shield-virus"></i> <strong>Infrastructure Hardening:</strong> Defensive configuration of firewalls, endpoint protocols, and routing.</li>
-                    <li><i class="fa-solid fa-clipboard-check"></i> <strong>Actionable Remediation:</strong> You receive a concrete, prioritized roadmap to patch critical attack vectors.</li>
-                </ul>
-                <div class="service-actions">
-                    <a href="/contact/" class="btn btn-primary">Schedule Audit</a>
+
+        <section class="services" aria-labelledby="scope-heading">
+            <h2 id="scope-heading" class="section-title">Assessment <span class="highlight">Scope</span></h2>
+            <p class="lede">An audit covers only the assets, environments, and time window named in the written scope. Engagements typically include one or more of the areas below. A third-party system is included only when the authorization names it.</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-network-wired" aria-hidden="true"></i></div>
+                    <h3>Network</h3>
+                    <p>External and internal networks in the written scope: exposed services, separation between zones, and account paths between systems. Hosts that are not listed are not tested.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-laptop-code" aria-hidden="true"></i></div>
+                    <h3>Web and Applications</h3>
+                    <p>Web applications, APIs, and custom software you designate. The review looks at authentication, authorization, session handling, and business logic that would affect confidentiality or integrity.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-wifi" aria-hidden="true"></i></div>
+                    <h3>Wireless</h3>
+                    <p>Authorized review of wireless networks you control, including authentication, guest separation, and whether an unexpected access point on the named site is bridging into the internal network.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-brain" aria-hidden="true"></i></div>
+                    <h3>AI and ML Deployments</h3>
+                    <p>Assessment of AI and machine-learning systems you operate or are authorized to have tested: the model endpoints, the applications in front of them, the data they can reach, and the infrastructure they run on.</p>
                 </div>
             </div>
         </section>
+
+        <section class="services" aria-labelledby="method-heading">
+            <h2 id="method-heading" class="section-title">Engagement <span class="highlight">Method</span></h2>
+            <p class="lede">Every engagement follows the same sequence, whether the scope is a single application or a broader environment. Testing does not start until authorization is in place.</p>
+            <ol class="process-list">
+                <li>
+                    <h3>Scoping</h3>
+                    <p>We agree the goal, the systems in scope, whether the work touches production, and what a useful result looks like. Systems that are out of scope are listed explicitly.</p>
+                </li>
+                <li>
+                    <h3>Rules of engagement</h3>
+                    <p>You provide written authorization from someone permitted to grant it. Together we set the testing window, emergency contacts, and any techniques or hosts that are excluded.</p>
+                </li>
+                <li>
+                    <h3>Assessment</h3>
+                    <p>Testing stays inside that agreement. The aim is to find and document weaknesses that matter, and to avoid needless disruption of the systems in scope.</p>
+                </li>
+                <li>
+                    <h3>Reporting</h3>
+                    <p>You receive a prioritized remediation report. Each finding names the affected asset, what was observed, the impact, a severity, and a recommended fix, so the most serious issues can be handled first.</p>
+                </li>
+                <li>
+                    <h3>Retest</h3>
+                    <p>After you apply fixes, we retest the findings we agreed to revisit and update each status. A retest checks those items. It is not a new assessment of everything else unless we scope one.</p>
+                </li>
+            </ol>
+        </section>
+
+        <section class="services" aria-labelledby="deliver-heading">
+            <h2 id="deliver-heading" class="section-title">What You <span class="highlight">Receive</span></h2>
+            <p class="lede">Two work products close the engagement: the report your team acts on, and a retest that shows what changed.</p>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-clipboard-list" aria-hidden="true"></i></div>
+                    <h3>Prioritized Remediation Report</h3>
+                    <p>Findings ordered by severity. Each one includes the affected asset, what was observed, the impact, and a recommended fix. It is written so engineering can act and the people funding the work can see what to address first.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-rotate-right" aria-hidden="true"></i></div>
+                    <h3>Retest</h3>
+                    <p>A follow-up pass on the findings you have remediated, with an updated status for each one: resolved, partially resolved, or still open. You keep that update with the original report.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="terms-heading">
+            <h2 id="terms-heading" class="section-title">Authorization and <span class="highlight">Confidentiality</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-file-contract" aria-hidden="true"></i> <strong>Written authorization.</strong> We test only with written permission from someone allowed to grant it. A public website, a customer of yours, or a vendor platform is out of scope unless that authorization names it.</li>
+                    <li><i class="fa-solid fa-handshake" aria-hidden="true"></i> <strong>Rules of engagement.</strong> Scope, timing, points of contact, and excluded systems are agreed before testing. If a step would go past that agreement, we stop and ask.</li>
+                    <li><i class="fa-solid fa-lock" aria-hidden="true"></i> <strong>Confidential handling.</strong> Findings, configuration details, and any client data encountered during the work are confidential. They are used to perform the engagement. We do not publish findings, client names, or samples from an engagement.</li>
+                    <li><i class="fa-solid fa-key" aria-hidden="true"></i> <strong>Access you provide.</strong> Credentials or access shared for a test are used only for that engagement and only inside the agreed scope. Reports go only to the contacts named in the agreement.</li>
+                    <li><i class="fa-solid fa-circle-info" aria-hidden="true"></i> <strong>Point in time.</strong> An audit describes the agreed scope as it was during the test. It is not a promise that every weakness was found, or that the environment stays the same after later changes.</li>
+                    <li><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> <strong>No secrets on the public form.</strong> Do not send passwords, keys, or sensitive data through the website. Share those only after an engagement is authorized, on a channel we agree in writing.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="schedule-heading">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-calendar-check" aria-hidden="true"></i></div>
+                <h2 id="schedule-heading">Schedule an <span class="highlight">Audit</span></h2>
+                <p>Tell us what you want tested. We reply with scoping questions. Nothing is in scope, and no testing starts, until it is agreed in writing.</p>
+                <a href="/contact/?service=Infosec" class="btn btn-primary">Schedule Audit</a>
+            </div>
+        </section>
     </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p><a href="/contact/">Contact</a></p>
+    </footer>
 </body>
 </html>

@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | W.R.S</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Contact | White Rabbit Security</title>
+    <meta name="description" content="Contact White Rabbit Security about an audit, data recovery, or hardware repair. Do not send passwords or sensitive data.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/contact/">
+    <link rel="icon" href="/wrs.jpg" type="image/jpeg">
+    <link rel="apple-touch-icon" href="/wrs.jpg">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Contact | White Rabbit Security">
+    <meta property="og:description" content="Contact White Rabbit Security about an audit, data recovery, or hardware repair. Do not send passwords or sensitive data.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/contact/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Contact | White Rabbit Security">
+    <meta name="twitter:description" content="Contact White Rabbit Security about an audit, data recovery, or hardware repair. Do not send passwords or sensitive data.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <nav>
-        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <a href="/" class="nav-logo">
+            <img src="/wrs.jpg" alt="White Rabbit Security">
+        </a>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/services/">Services</a>
@@ -18,38 +38,56 @@
             <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <main>
+    <main id="main" tabindex="-1">
         <header class="hero">
             <h1>Secure <span class="highlight">Intake</span></h1>
-            <p>Submit your operational requirements below.</p>
+            <p>Tell us what you need. We reply by email.</p>
         </header>
         <section class="services">
-            <form action="https://formspree.io/f/mgaeooll" method="POST" class="secure-form">
+            <form id="intake-form" action="https://formspree.io/f/mgaeooll" method="POST" class="secure-form" aria-describedby="intake-notice">
+                <p id="intake-notice" class="form-notice">
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
+                    Do not send passwords, API keys, secrets, or other sensitive data through this form.
+                </p>
+                <div class="bot-trap" aria-hidden="true">
+                    <label for="intake-gotcha">Leave this field blank</label>
+                    <input id="intake-gotcha" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+                </div>
+                <input type="hidden" name="_next" id="intake-next" value="https://whiterabbitsecurity.app/contact/thanks/">
+                <input type="hidden" name="subject" id="intake-subject" value="White Rabbit Security inquiry">
+
                 <div class="form-group">
-                    <label for="intake-name">Identifier (Name)</label>
+                    <label for="intake-name">Name</label>
                     <input id="intake-name" type="text" name="name" class="form-control" autocomplete="name" required>
                 </div>
                 <div class="form-group">
-                    <label for="intake-email">Comms Routing (Email)</label>
+                    <label for="intake-email">Email</label>
                     <input id="intake-email" type="email" name="email" class="form-control" autocomplete="email" required>
                 </div>
                 <div class="form-group">
-                    <label for="intake-service">Operational Domain</label>
+                    <label for="intake-service">Service</label>
                     <select id="intake-service" name="service" class="form-control" required>
-                        <option value="" disabled selected>Select an objective...</option>
-                        <option value="Hardware">Hardware Repair / Fabrication</option>
+                        <option value="" disabled selected>Select a service</option>
+                        <option value="Hardware">Hardware Repair</option>
                         <option value="Data">Data Recovery</option>
-                        <option value="Infosec">InfoSec Audit / Pentest</option>
-                        <option value="Other">Other Protocol</option>
+                        <option value="Infosec">InfoSec Audit</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="intake-message">Mission Brief (Details)</label>
+                    <label for="intake-message">Message</label>
                     <textarea id="intake-message" name="message" class="form-control" required></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Transmit Payload</button>
+                <button id="intake-submit" type="submit" class="btn btn-primary btn-block">Transmit Payload</button>
+                <p id="form-status" class="form-status" role="alert"></p>
             </form>
         </section>
     </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p><a href="/contact/">Contact</a></p>
+    </footer>
+    <script src="/js/contact.js"></script>
 </body>
 </html>
