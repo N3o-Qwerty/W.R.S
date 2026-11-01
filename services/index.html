@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#060b13">
+    <meta name="description" content="Hardware repair, data recovery, and information security audits from White Rabbit Security.">
     <title>Services | White Rabbit Security</title>
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <a class="skip-link" href="#content">Skip to content</a>
     <nav>
-        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <a href="/" class="nav-logo" aria-label="White Rabbit Security home">
+            <img src="/logo.png" alt="" width="40" height="40">
+        </a>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/services/" class="active" aria-current="page">Services</a>
@@ -18,7 +25,7 @@
             <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <main>
+    <main id="content">
         <header class="hero">
             <h1>Core <span class="highlight">Capabilities</span></h1>
             <p>Select a service below to view deep technical capabilities.</p>
@@ -26,22 +33,22 @@
         <section class="services">
             <div class="services-grid">
                 <a href="/services/hardware-repair/" class="service-card">
-                    <div class="service-icon"><i class="fa-solid fa-wrench"></i></div>
+                    <div class="service-icon" aria-hidden="true"><i class="fa-solid fa-wrench"></i></div>
                     <h3>Hardware <span class="highlight">Repair</span></h3>
                     <p>Component-level diagnostics, custom fabrication, and legacy system restoration.</p>
-                    <span class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</span>
+                    <span class="btn btn-outline btn-compact">View Specs</span>
                 </a>
                 <a href="/services/data-recovery/" class="service-card">
-                    <div class="service-icon"><i class="fa-solid fa-hard-drive"></i></div>
+                    <div class="service-icon" aria-hidden="true"><i class="fa-solid fa-hard-drive"></i></div>
                     <h3>Data <span class="highlight">Recovery</span></h3>
                     <p>Secure data extraction for failing drives, corrupted arrays, and damaged media.</p>
-                    <span class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</span>
+                    <span class="btn btn-outline btn-compact">View Specs</span>
                 </a>
                 <a href="/services/infosec-audits/" class="service-card">
-                    <div class="service-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div class="service-icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></div>
                     <h3>InfoSec <span class="highlight">Audits</span></h3>
                     <p>Offensive security assessments, vulnerability mapping, and infrastructure hardening.</p>
-                    <span class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</span>
+                    <span class="btn btn-outline btn-compact">View Specs</span>
                 </a>
             </div>
         </section>

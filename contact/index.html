@@ -3,13 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | W.R.S</title>
+    <meta name="theme-color" content="#060b13">
+    <meta name="description" content="Send an intake for hardware repair, data recovery, or an information security audit.">
+    <title>Contact | White Rabbit Security</title>
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+    <a class="skip-link" href="#content">Skip to content</a>
     <nav>
-        <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
+        <a href="/" class="nav-logo" aria-label="White Rabbit Security home">
+            <img src="/logo.png" alt="" width="40" height="40">
+        </a>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/services/">Services</a>
@@ -18,20 +25,26 @@
             <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <main>
+    <main id="content">
         <header class="hero">
             <h1>Secure <span class="highlight">Intake</span></h1>
             <p>Submit your operational requirements below.</p>
         </header>
         <section class="services">
             <form action="https://formspree.io/f/mgaeooll" method="POST" class="secure-form">
+                <input type="hidden" name="_subject" value="W.R.S secure intake">
+                <input type="hidden" name="_next" value="https://whiterabbitsecurity.app/contact/thanks/">
+                <div class="honeypot" aria-hidden="true">
+                    <label for="intake-company">Company</label>
+                    <input id="intake-company" type="text" name="_gotcha" tabindex="-1" autocomplete="off">
+                </div>
                 <div class="form-group">
                     <label for="intake-name">Identifier (Name)</label>
-                    <input id="intake-name" type="text" name="name" class="form-control" autocomplete="name" required>
+                    <input id="intake-name" type="text" name="name" class="form-control" autocomplete="name" maxlength="120" required>
                 </div>
                 <div class="form-group">
                     <label for="intake-email">Comms Routing (Email)</label>
-                    <input id="intake-email" type="email" name="email" class="form-control" autocomplete="email" required>
+                    <input id="intake-email" type="email" name="email" class="form-control" autocomplete="email" maxlength="254" required>
                 </div>
                 <div class="form-group">
                     <label for="intake-service">Operational Domain</label>
@@ -45,7 +58,7 @@
                 </div>
                 <div class="form-group">
                     <label for="intake-message">Mission Brief (Details)</label>
-                    <textarea id="intake-message" name="message" class="form-control" required></textarea>
+                    <textarea id="intake-message" name="message" class="form-control" maxlength="4000" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">Transmit Payload</button>
             </form>

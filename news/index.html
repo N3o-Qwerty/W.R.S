@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#060b13">
+    <meta name="description" content="Live Hacker News wire and a link to World Monitor telemetry from White Rabbit Security.">
     <title>Intelligence Feed | White Rabbit Security</title>
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/feed.js" defer></script>
 </head>
 <body>
+    <a class="skip-link" href="#content">Skip to content</a>
     <nav>
         <a href="/" class="nav-logo" aria-label="White Rabbit Security home">
-            <img src="/wrs.jpg" alt="White Rabbit Security crest">
+            <img src="/logo.png" alt="" width="40" height="40">
         </a>
         <div class="nav-links">
             <a href="/">Home</a>
@@ -21,7 +27,7 @@
         </div>
     </nav>
 
-    <main>
+    <main id="content">
         <header class="hero">
             <h1>Intelligence <span class="highlight">Feed</span></h1>
             <p>Live global telemetry, threat advisories, and real-time Hacker News wire.</p>
@@ -29,16 +35,16 @@
 
         <section class="services">
             <div class="uplink">
-                <div class="uplink-icon">
+                <div class="uplink-icon" aria-hidden="true">
                     <i class="fa-solid fa-earth-americas"></i>
                 </div>
                 <h2>World Monitor <span class="highlight">Uplink</span></h2>
                 <p>Access real-time global telemetry and geopolitical threat tracking.</p>
-                <a href="https://www.worldmonitor.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Launch World Monitor</a>
+                <a href="https://www.worldmonitor.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Launch World Monitor<span class="sr-only"> (opens in a new tab)</span></a>
             </div>
 
             <h2 class="section-title">Hacker <span class="highlight">News Wire</span></h2>
-            
+
             <div id="hn-feed" class="services-grid">
                 <div class="service-card feed-status">
                     <p>Fetching live intelligence payloads from Hacker News...</p>
@@ -46,97 +52,5 @@
             </div>
         </section>
     </main>
-
-    <script>
-        function storyLink(story) {
-            const fallback = 'https://news.ycombinator.com/item?id=' + encodeURIComponent(story.id);
-            if (!story.url) return fallback;
-            try {
-                const parsed = new URL(story.url);
-                if (parsed.protocol === 'http:' || parsed.protocol === 'https:') return parsed.href;
-            } catch (e) {
-                return fallback;
-            }
-            return fallback;
-        }
-
-        function storyHost(url) {
-            try {
-                return new URL(url).hostname;
-            } catch (e) {
-                return 'news.ycombinator.com';
-            }
-        }
-
-        function renderStory(story) {
-            const href = storyLink(story);
-            const card = document.createElement('a');
-            card.href = href;
-            card.target = '_blank';
-            card.rel = 'noopener noreferrer';
-            card.className = 'service-card';
-
-            const score = document.createElement('p');
-            score.className = 'hn-score';
-            const bolt = document.createElement('i');
-            bolt.className = 'fa-solid fa-bolt';
-            bolt.setAttribute('aria-hidden', 'true');
-            score.appendChild(bolt);
-            score.appendChild(document.createTextNode(' SCORE: ' + (story.score || 0)));
-
-            const title = document.createElement('h3');
-            title.className = 'hn-title';
-            title.textContent = story.title;
-
-            const source = document.createElement('p');
-            source.className = 'hn-source';
-            source.textContent = 'Source: ' + storyHost(href);
-
-            card.appendChild(score);
-            card.appendChild(title);
-            card.appendChild(source);
-            return card;
-        }
-
-        function showFeedMessage(feed, message, isError) {
-            feed.textContent = '';
-            const card = document.createElement('div');
-            card.className = 'service-card feed-status';
-            const p = document.createElement('p');
-            if (isError) p.className = 'feed-error';
-            p.textContent = message;
-            card.appendChild(p);
-            feed.appendChild(card);
-        }
-
-        async function fetchHackerNews() {
-            const feed = document.getElementById('hn-feed');
-            try {
-                const topStoriesRes = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
-                if (!topStoriesRes.ok) throw new Error('top stories unavailable');
-                const storyIds = await topStoriesRes.json();
-                if (!Array.isArray(storyIds)) throw new Error('unexpected payload');
-
-                const stories = await Promise.all(storyIds.slice(0, 6).map(async function (id) {
-                    try {
-                        const storyRes = await fetch('https://hacker-news.firebaseio.com/v0/item/' + encodeURIComponent(id) + '.json');
-                        if (!storyRes.ok) return null;
-                        return await storyRes.json();
-                    } catch (e) {
-                        return null;
-                    }
-                }));
-
-                const usable = stories.filter(function (story) { return story && story.title; });
-                if (!usable.length) throw new Error('no stories');
-
-                feed.textContent = '';
-                usable.forEach(function (story) { feed.appendChild(renderStory(story)); });
-            } catch (error) {
-                showFeedMessage(feed, 'Failed to establish telemetry link with Hacker News wire.', true);
-            }
-        }
-        fetchHackerNews();
-    </script>
 </body>
 </html>
