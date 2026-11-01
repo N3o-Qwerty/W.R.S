@@ -21,6 +21,7 @@
     <meta name="twitter:title" content="Contact | White Rabbit Security">
     <meta name="twitter:description" content="Contact White Rabbit Security about an audit, data recovery, or hardware repair. Do not send passwords or sensitive data.">
     <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="preconnect" href="https://challenges.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/css/style.css">
 </head>
@@ -78,6 +79,11 @@
                     <label for="intake-message">Message</label>
                     <textarea id="intake-message" name="message" class="form-control" required></textarea>
                 </div>
+                <div class="form-group">
+                    <p class="turnstile-label" id="intake-turnstile-label">Spam check</p>
+                    <div id="intake-turnstile" class="cf-turnstile turnstile-slot" data-sitekey="0x4AAAAAAEiZO1HFW-StlVeR" data-action="contact" data-theme="dark" data-size="flexible" data-error-callback="onIntakeTurnstileError" aria-labelledby="intake-turnstile-label"></div>
+                    <p id="turnstile-status" class="turnstile-status" role="status"></p>
+                </div>
                 <button id="intake-submit" type="submit" class="btn btn-primary btn-block">Transmit Payload</button>
                 <p id="form-status" class="form-status" role="alert"></p>
             </form>
@@ -89,5 +95,6 @@
         <p><a href="/contact/">Contact</a></p>
     </footer>
     <script src="/js/contact.js"></script>
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer onerror="onIntakeTurnstileScriptError()"></script>
 </body>
 </html>

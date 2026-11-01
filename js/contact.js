@@ -5,6 +5,51 @@
     var next = document.getElementById('intake-next');
     var status = document.getElementById('form-status');
     var button = document.getElementById('intake-submit');
+    var turnstileSlot = document.getElementById('intake-turnstile');
+    var turnstileStatus = document.getElementById('turnstile-status');
+
+    function setTurnstileStatus(message) {
+        if (turnstileStatus) turnstileStatus.textContent = message || '';
+    }
+
+    window.onIntakeTurnstileError = function () {
+        setTurnstileStatus('The spam check did not finish. You can still send this message.');
+        return true;
+    };
+
+    window.onIntakeTurnstileScriptError = function () {
+        setTurnstileStatus('The spam check could not be loaded. You can still send this message.');
+    };
+
+    if (turnstileSlot) {
+        var turnstileTimer = window.setTimeout(function () {
+            if (!window.turnstile) {
+                setTurnstileStatus('The spam check could not be loaded. You can still send this message.');
+            }
+        }, 8000);
+        var turnstilePoll = window.setInterval(function () {
+            if (!window.turnstile) return;
+            window.clearInterval(turnstilePoll);
+            window.clearTimeout(turnstileTimer);
+            if (turnstileStatus && turnstileStatus.textContent.indexOf('could not be loaded') !== -1) {
+                turnstileStatus.textContent = '';
+            }
+        }, 200);
+    }
+
+    function turnstileWidgetId() {
+        if (!turnstileSlot) return null;
+        var field = turnstileSlot.querySelector('input[name="cf-turnstile-response"]');
+        if (!field || !field.id || field.id.slice(-9) !== '_response') return null;
+        return field.id.slice(0, -9);
+    }
+
+    function resetTurnstile() {
+        if (!window.turnstile || typeof window.turnstile.reset !== 'function') return;
+        var widgetId = turnstileWidgetId();
+        if (!widgetId) return;
+        window.turnstile.reset(widgetId);
+    }
 
     if (next) {
         next.value = new URL('/contact/thanks/', window.location.href).href;
@@ -92,6 +137,7 @@
                 throw err;
             });
         }).catch(function (error) {
+            resetTurnstile();
             if (status) {
                 status.textContent = error && error.formspree
                     ? error.message
