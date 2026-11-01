@@ -9,78 +9,131 @@
 </head>
 <body>
     <nav>
-        <div class="nav-logo">
-            <img src="/Gemini_Generated_Image_xgu7hpxgu7hpxgu7~2.jpg" alt="W.R.S Logo" style="height: 40px; border-radius: 5px;">
-        </div>
+        <a href="/" class="nav-logo" aria-label="White Rabbit Security home">
+            <img src="/wrs.jpg" alt="White Rabbit Security crest">
+        </a>
         <div class="nav-links">
             <a href="/">Home</a>
             <a href="/services/">Services</a>
-            <a href="/news/" class="active">News</a>
+            <a href="/news/" class="active" aria-current="page">News</a>
             <a href="/contact/">Contact</a>
             <a href="/resources/">Resources</a>
         </div>
     </nav>
 
-    <header class="hero">
-        <h1>Intelligence <span class="highlight">Feed</span></h1>
-        <p>Live global telemetry, threat advisories, and real-time Hacker News wire.</p>
-    </header>
+    <main>
+        <header class="hero">
+            <h1>Intelligence <span class="highlight">Feed</span></h1>
+            <p>Live global telemetry, threat advisories, and real-time Hacker News wire.</p>
+        </header>
 
-    <section class="services">
-        <!-- World Monitor Gateway -->
-        <div style="text-align: center; padding: 40px 20px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; margin-bottom: 3rem; box-shadow: 0 10px 30px rgba(0, 229, 255, 0.1);">
-            <div style="font-size: 2.2rem; color: var(--accent-cyan); margin-bottom: 15px;">
-                <i class="fa-solid fa-earth-americas"></i>
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon">
+                    <i class="fa-solid fa-earth-americas"></i>
+                </div>
+                <h2>World Monitor <span class="highlight">Uplink</span></h2>
+                <p>Access real-time global telemetry and geopolitical threat tracking.</p>
+                <a href="https://www.worldmonitor.app" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Launch World Monitor</a>
             </div>
-            <h2 style="font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">World Monitor <span class="highlight">Uplink</span></h2>
-            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto 20px; font-size: 0.95rem;">Access real-time global telemetry and geopolitical threat tracking.</p>
-            <a href="https://www.worldmonitor.app" target="_blank" class="btn btn-primary">Launch World Monitor</a>
-        </div>
 
-        <!-- Hacker News Real-Time Section -->
-        <h2 style="text-align: center; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; font-size: 1.5rem;">Hacker <span class="highlight">News Wire</span></h2>
-        
-        <div id="hn-feed" class="services-grid">
-            <div class="service-card" style="grid-column: 1 / -1; text-align: center; cursor: default;">
-                <p style="color: var(--text-muted);">Fetching live intelligence payloads from Hacker News...</p>
+            <h2 class="section-title">Hacker <span class="highlight">News Wire</span></h2>
+            
+            <div id="hn-feed" class="services-grid">
+                <div class="service-card feed-status">
+                    <p>Fetching live intelligence payloads from Hacker News...</p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <script>
+        function storyLink(story) {
+            const fallback = 'https://news.ycombinator.com/item?id=' + encodeURIComponent(story.id);
+            if (!story.url) return fallback;
+            try {
+                const parsed = new URL(story.url);
+                if (parsed.protocol === 'http:' || parsed.protocol === 'https:') return parsed.href;
+            } catch (e) {
+                return fallback;
+            }
+            return fallback;
+        }
+
+        function storyHost(url) {
+            try {
+                return new URL(url).hostname;
+            } catch (e) {
+                return 'news.ycombinator.com';
+            }
+        }
+
+        function renderStory(story) {
+            const href = storyLink(story);
+            const card = document.createElement('a');
+            card.href = href;
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+            card.className = 'service-card';
+
+            const score = document.createElement('p');
+            score.className = 'hn-score';
+            const bolt = document.createElement('i');
+            bolt.className = 'fa-solid fa-bolt';
+            bolt.setAttribute('aria-hidden', 'true');
+            score.appendChild(bolt);
+            score.appendChild(document.createTextNode(' SCORE: ' + (story.score || 0)));
+
+            const title = document.createElement('h3');
+            title.className = 'hn-title';
+            title.textContent = story.title;
+
+            const source = document.createElement('p');
+            source.className = 'hn-source';
+            source.textContent = 'Source: ' + storyHost(href);
+
+            card.appendChild(score);
+            card.appendChild(title);
+            card.appendChild(source);
+            return card;
+        }
+
+        function showFeedMessage(feed, message, isError) {
+            feed.textContent = '';
+            const card = document.createElement('div');
+            card.className = 'service-card feed-status';
+            const p = document.createElement('p');
+            if (isError) p.className = 'feed-error';
+            p.textContent = message;
+            card.appendChild(p);
+            feed.appendChild(card);
+        }
+
         async function fetchHackerNews() {
+            const feed = document.getElementById('hn-feed');
             try {
                 const topStoriesRes = await fetch('https://hacker-news.firebaseio.com/v0/topstories.json');
+                if (!topStoriesRes.ok) throw new Error('top stories unavailable');
                 const storyIds = await topStoriesRes.json();
-                const feedContainer = document.getElementById('hn-feed');
-                feedContainer.innerHTML = '';
+                if (!Array.isArray(storyIds)) throw new Error('unexpected payload');
 
-                // Fetch the top 6 stories
-                for (let i = 0; i < 6; i++) {
-                    const storyRes = await fetch(`https://hacker-news.firebaseio.com/v0/item/${storyIds[i]}.json`);
-                    const story = await storyRes.json();
-                    
-                    if (story && story.title) {
-                        const card = document.createElement('a');
-                        card.href = story.url || `https://news.ycombinator.com/item?id=${story.id}`;
-                        card.target = '_blank';
-                        card.className = 'service-card';
-                        card.style.textDecoration = 'none';
-                        card.style.display = 'block';
-
-                        card.innerHTML = `
-                            <p style="font-size: 0.8rem; color: var(--accent-cyan); font-weight: bold; margin-bottom: 5px;"><i class="fa-solid fa-bolt"></i> SCORE: ${story.score || 0}</p>
-                            <h3 style="font-size: 1.2rem; margin-bottom: 10px; color: var(--text-main);">${story.title}</h3>
-                            <p style="font-size: 0.85rem; color: var(--text-muted);">Source: ${story.url ? new URL(story.url).hostname : 'ycombinator.com'}</p>
-                        `;
-                        feedContainer.appendChild(card);
+                const stories = await Promise.all(storyIds.slice(0, 6).map(async function (id) {
+                    try {
+                        const storyRes = await fetch('https://hacker-news.firebaseio.com/v0/item/' + encodeURIComponent(id) + '.json');
+                        if (!storyRes.ok) return null;
+                        return await storyRes.json();
+                    } catch (e) {
+                        return null;
                     }
-                }
+                }));
+
+                const usable = stories.filter(function (story) { return story && story.title; });
+                if (!usable.length) throw new Error('no stories');
+
+                feed.textContent = '';
+                usable.forEach(function (story) { feed.appendChild(renderStory(story)); });
             } catch (error) {
-                document.getElementById('hn-feed').innerHTML = `
-                    <div class="service-card" style="grid-column: 1 / -1; text-align: center; cursor: default;">
-                        <p style="color: #ff3333;">Failed to establish telemetry link with Hacker News wire.</p>
-                    </div>`;
+                showFeedMessage(feed, 'Failed to establish telemetry link with Hacker News wire.', true);
             }
         }
         fetchHackerNews();

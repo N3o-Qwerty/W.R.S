@@ -12,26 +12,30 @@
         <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/services/" class="active">Services</a>
+            <a href="/services/" class="active" aria-current="page">Services</a>
+            <a href="/news/">News</a>
             <a href="/contact/">Contact</a>
+            <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <header class="hero">
-        <h1>Hardware <span class="highlight">Repair</span></h1>
-        <p>Advanced physical system restoration and custom modification.</p>
-    </header>
-    <section class="services">
-        <div class="service-card" style="max-width: 800px; margin: 0 auto;">
-            <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px;">
-                <li><i class="fa-solid fa-microchip" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Component-Level Repair:</strong> Micro-soldering and repairing damaged PCB traces.</li>
-                <li><i class="fa-solid fa-bolt" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Advanced Diagnostics:</strong> Identifying root-cause electrical failures in complex logic boards.</li>
-                <li><i class="fa-solid fa-cube" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Custom Fabrication:</strong> 3D printed enclosures, structural mods, and custom firmware.</li>
-                <li><i class="fa-solid fa-backward" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Reverse Engineering:</strong> Analyzing and diagnosing undocumented industrial control units.</li>
-            </ul>
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="/contact/" class="btn btn-primary">Initiate Intake</a>
+    <main>
+        <header class="hero">
+            <h1>Hardware <span class="highlight">Repair</span></h1>
+            <p>Advanced physical system restoration and custom modification.</p>
+        </header>
+        <section class="services">
+            <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-microchip"></i> <strong>Component-Level Repair:</strong> Micro-soldering and repairing damaged PCB traces.</li>
+                    <li><i class="fa-solid fa-bolt"></i> <strong>Advanced Diagnostics:</strong> Identifying root-cause electrical failures in complex logic boards.</li>
+                    <li><i class="fa-solid fa-cube"></i> <strong>Custom Fabrication:</strong> 3D printed enclosures, structural mods, and custom firmware.</li>
+                    <li><i class="fa-solid fa-backward"></i> <strong>Reverse Engineering:</strong> Analyzing and diagnosing undocumented industrial control units.</li>
+                </ul>
+                <div class="service-actions">
+                    <a href="/contact/" class="btn btn-primary">Initiate Intake</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 </body>
 </html>
