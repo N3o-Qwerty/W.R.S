@@ -12,26 +12,30 @@
         <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/services/" class="active">Services</a>
+            <a href="/services/" class="active" aria-current="page">Services</a>
+            <a href="/news/">News</a>
             <a href="/contact/">Contact</a>
+            <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <header class="hero">
-        <h1>Data <span class="highlight">Recovery</span></h1>
-        <p style="color: #ff3333; font-weight: bold;">CRITICAL: Power down failing devices immediately.</p>
-    </header>
-    <section class="services">
-        <div class="service-card" style="max-width: 800px; margin: 0 auto;">
-            <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px;">
-                <li><i class="fa-solid fa-server" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Supported Media:</strong> NVMe, SSDs, legacy HDDs, and corrupted RAID arrays.</li>
-                <li><i class="fa-solid fa-file-circle-exclamation" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Logical Recovery:</strong> Restoration of damaged partitions and file systems.</li>
-                <li><i class="fa-solid fa-hammer" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Physical Recovery:</strong> Extraction from drives with mechanical or firmware failures.</li>
-                <li><i class="fa-solid fa-lock" style="color: var(--accent-cyan); width: 25px;"></i> <strong>Strict Confidentiality:</strong> Handled under absolute privacy protocols. Zero unauthorized duplication.</li>
-            </ul>
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="/contact/" class="btn btn-primary">Request Extraction</a>
+    <main>
+        <header class="hero">
+            <h1>Data <span class="highlight">Recovery</span></h1>
+            <p class="callout-critical">CRITICAL: Power down failing devices immediately.</p>
+        </header>
+        <section class="services">
+            <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-server"></i> <strong>Supported Media:</strong> NVMe, SSDs, legacy HDDs, and corrupted RAID arrays.</li>
+                    <li><i class="fa-solid fa-file-circle-exclamation"></i> <strong>Logical Recovery:</strong> Restoration of damaged partitions and file systems.</li>
+                    <li><i class="fa-solid fa-hammer"></i> <strong>Physical Recovery:</strong> Extraction from drives with mechanical or firmware failures.</li>
+                    <li><i class="fa-solid fa-lock"></i> <strong>Strict Confidentiality:</strong> Handled under absolute privacy protocols. Zero unauthorized duplication.</li>
+                </ul>
+                <div class="service-actions">
+                    <a href="/contact/" class="btn btn-primary">Request Extraction</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 </body>
 </html>

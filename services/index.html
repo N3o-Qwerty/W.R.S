@@ -12,37 +12,39 @@
         <a href="/" class="nav-logo"><i class="fa-solid fa-shield-cat"></i> W.R.S.</a>
         <div class="nav-links">
             <a href="/">Home</a>
-            <a href="/services/" class="active">Services</a>
+            <a href="/services/" class="active" aria-current="page">Services</a>
             <a href="/news/">News</a>
             <a href="/contact/">Contact</a>
             <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <header class="hero">
-        <h1>Core <span class="highlight">Capabilities</span></h1>
-        <p>Select a service below to view deep technical capabilities.</p>
-    </header>
-    <section class="services">
-        <div class="services-grid">
-            <div class="service-card">
-                <div class="service-icon"><i class="fa-solid fa-wrench"></i></div>
-                <h3>Hardware <span class="highlight">Repair</span></h3>
-                <p>Component-level diagnostics, custom fabrication, and legacy system restoration.</p>
-                <a href="/services/hardware-repair/" class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</a>
+    <main>
+        <header class="hero">
+            <h1>Core <span class="highlight">Capabilities</span></h1>
+            <p>Select a service below to view deep technical capabilities.</p>
+        </header>
+        <section class="services">
+            <div class="services-grid">
+                <a href="/services/hardware-repair/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-wrench"></i></div>
+                    <h3>Hardware <span class="highlight">Repair</span></h3>
+                    <p>Component-level diagnostics, custom fabrication, and legacy system restoration.</p>
+                    <span class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</span>
+                </a>
+                <a href="/services/data-recovery/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-hard-drive"></i></div>
+                    <h3>Data <span class="highlight">Recovery</span></h3>
+                    <p>Secure data extraction for failing drives, corrupted arrays, and damaged media.</p>
+                    <span class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</span>
+                </a>
+                <a href="/services/infosec-audits/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>InfoSec <span class="highlight">Audits</span></h3>
+                    <p>Offensive security assessments, vulnerability mapping, and infrastructure hardening.</p>
+                    <span class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</span>
+                </a>
             </div>
-            <div class="service-card">
-                <div class="service-icon"><i class="fa-solid fa-hard-drive"></i></div>
-                <h3>Data <span class="highlight">Recovery</span></h3>
-                <p>Secure data extraction for failing drives, corrupted arrays, and damaged media.</p>
-                <a href="/services/data-recovery/" class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</a>
-            </div>
-            <div class="service-card">
-                <div class="service-icon"><i class="fa-solid fa-shield-halved"></i></div>
-                <h3>InfoSec <span class="highlight">Audits</span></h3>
-                <p>Offensive security assessments, vulnerability mapping, and infrastructure hardening.</p>
-                <a href="/services/infosec-audits/" class="btn btn-outline" style="padding: 8px 20px; font-size: 0.8rem;">View Specs</a>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
 </body>
 </html>

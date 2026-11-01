@@ -14,42 +14,42 @@
             <a href="/">Home</a>
             <a href="/services/">Services</a>
             <a href="/news/">News</a>
-            <a href="/contact/" class="active">Contact</a>
+            <a href="/contact/" class="active" aria-current="page">Contact</a>
             <a href="/resources/">Resources</a>
         </div>
     </nav>
-    <header class="hero">
-        <h1>Secure <span class="highlight">Intake</span></h1>
-        <p>Submit your operational requirements below.</p>
-    </header>
-    <section class="services">
-        <!-- Formspree ID is updated below -->
-        <form action="https://formspree.io/f/mgaeooll" method="POST" class="secure-form">
-            <div class="form-group">
-                <label>Identifier (Name)</label>
-                <input type="text" name="name" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>Comms Routing (Email)</label>
-                <input type="email" name="email" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label>Operational Domain</label>
-                <select name="service" class="form-control" required>
-                    <option value="" disabled selected>Select an objective...</option>
-                    <option value="Hardware">Hardware Repair / Fabrication</option>
-                    <option value="Data">Data Recovery</option>
-                    <option value="Infosec">InfoSec Audit / Pentest</option>
-                    <option value="Other">Other Protocol</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>Mission Brief (Details)</label>
-                <textarea name="message" class="form-control" required></textarea>
-            </div>
-            <div class="cf-turnstile" data-sitekey="YOUR_CLOUDFLARE_SITEKEY"></div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Transmit Payload</button>
-        </form>
-    </section>
+    <main>
+        <header class="hero">
+            <h1>Secure <span class="highlight">Intake</span></h1>
+            <p>Submit your operational requirements below.</p>
+        </header>
+        <section class="services">
+            <form action="https://formspree.io/f/mgaeooll" method="POST" class="secure-form">
+                <div class="form-group">
+                    <label for="intake-name">Identifier (Name)</label>
+                    <input id="intake-name" type="text" name="name" class="form-control" autocomplete="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="intake-email">Comms Routing (Email)</label>
+                    <input id="intake-email" type="email" name="email" class="form-control" autocomplete="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="intake-service">Operational Domain</label>
+                    <select id="intake-service" name="service" class="form-control" required>
+                        <option value="" disabled selected>Select an objective...</option>
+                        <option value="Hardware">Hardware Repair / Fabrication</option>
+                        <option value="Data">Data Recovery</option>
+                        <option value="Infosec">InfoSec Audit / Pentest</option>
+                        <option value="Other">Other Protocol</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="intake-message">Mission Brief (Details)</label>
+                    <textarea id="intake-message" name="message" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Transmit Payload</button>
+            </form>
+        </section>
+    </main>
 </body>
 </html>
