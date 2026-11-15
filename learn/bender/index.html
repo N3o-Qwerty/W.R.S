@@ -62,9 +62,10 @@
             <h2 id="bender-hints" class="section-title">Spoiler-Free <span class="highlight">Hints</span></h2>
             <div class="service-card prose-card">
                 <ul class="spec-list">
-                    <li><i class="fa-solid fa-1" aria-hidden="true"></i> <strong>Talk to it first.</strong> Find out what the assistant is supposed to do before trying to make it do something else.</li>
-                    <li><i class="fa-solid fa-2" aria-hidden="true"></i> <strong>Ask what it can access.</strong> An assistant often knows more about its own setup than it should reveal.</li>
-                    <li><i class="fa-solid fa-3" aria-hidden="true"></i> <strong>Enumerate after the foothold.</strong> Once you have a shell, the normal Linux checks apply. Go through them in order.</li>
+                    <li><i class="fa-solid fa-1" aria-hidden="true"></i> <strong>Enumerate the web app first.</strong> Check the usual places a site tells you more than it means to &mdash; <code>robots.txt</code> is a good start &mdash; and note any usernames you find.</li>
+                    <li><i class="fa-solid fa-2" aria-hidden="true"></i> <strong>Make the assistant misbehave.</strong> Find the phrase or input that pushes it out of its normal script. When it breaks, read its output carefully.</li>
+                    <li><i class="fa-solid fa-3" aria-hidden="true"></i> <strong>That output is encoded, not random.</strong> What looks like gibberish is a secret in disguise. Work out the encoding and decode it.</li>
+                    <li><i class="fa-solid fa-4" aria-hidden="true"></i> <strong>Enumerate after the foothold.</strong> Once you have a shell, run the normal Linux checks in order. A file that runs with more privilege than it should is the way up.</li>
                 </ul>
             </div>
         </section>
