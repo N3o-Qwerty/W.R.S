@@ -1,14 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Data Recovery | White Rabbit Security</title>
     <meta name="description" content="Secure recovery for failing drives, corrupted arrays, and damaged media. Power down a failing device and contact White Rabbit Security.">
     <meta name="theme-color" content="#060b13">
     <link rel="canonical" href="https://whiterabbitsecurity.app/services/data-recovery/">
-    <link rel="icon" href="/wrs.jpg" type="image/jpeg">
-    <link rel="apple-touch-icon" href="/wrs.jpg">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta property="og:site_name" content="White Rabbit Security">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Data Recovery | White Rabbit Security">
@@ -28,7 +31,7 @@
     <a class="skip-link" href="#main">Skip to content</a>
     <nav>
         <a href="/" class="nav-logo">
-            <img src="/wrs.jpg" alt="White Rabbit Security">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
         </a>
         <div class="nav-links">
             <a href="/">Home</a>
@@ -41,18 +44,18 @@
     <main id="main" tabindex="-1">
         <header class="hero">
             <h1>Data <span class="highlight">Recovery</span></h1>
-            <p class="callout-critical">CRITICAL: Power down failing devices immediately.</p>
+            <p class="callout-critical">If a drive is clicking, grinding, or failing, power it down now. Every extra minute of use can make recovery harder.</p>
         </header>
         <section class="services">
-            <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+            <div class="service-card narrow-card">
                 <ul class="spec-list">
                     <li><i class="fa-solid fa-server" aria-hidden="true"></i> <strong>Supported Media:</strong> NVMe, SSDs, legacy HDDs, and corrupted RAID arrays.</li>
                     <li><i class="fa-solid fa-file-circle-exclamation" aria-hidden="true"></i> <strong>Logical Recovery:</strong> Restoration of damaged partitions and file systems.</li>
                     <li><i class="fa-solid fa-hammer" aria-hidden="true"></i> <strong>Physical Recovery:</strong> Extraction from drives with mechanical or firmware failures.</li>
-                    <li><i class="fa-solid fa-lock" aria-hidden="true"></i> <strong>Strict Confidentiality:</strong> Handled under absolute privacy protocols. Zero unauthorized duplication.</li>
+                    <li><i class="fa-solid fa-lock" aria-hidden="true"></i> <strong>Strict Confidentiality:</strong> Media and recovered data are handled confidentially, copied only as far as the recovery requires, and returned or securely deleted when the job is done.</li>
                 </ul>
                 <div class="service-actions">
-                    <a href="/contact/?service=Data" class="btn btn-primary">Request Extraction</a>
+                    <a href="/contact/?service=Data" class="btn btn-primary">Request Recovery</a>
                 </div>
             </div>
         </section>
@@ -60,7 +63,7 @@
     <footer class="site-footer">
         <p>&copy; 2026 White Rabbit Security</p>
         <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
-        <p><a href="/contact/">Contact</a></p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
     </footer>
 </body>
 </html>

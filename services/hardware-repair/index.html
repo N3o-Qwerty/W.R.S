@@ -1,14 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Hardware Repair | White Rabbit Security</title>
     <meta name="description" content="Component-level computer repair, diagnostics, custom fabrication, and legacy system restoration from White Rabbit Security.">
     <meta name="theme-color" content="#060b13">
     <link rel="canonical" href="https://whiterabbitsecurity.app/services/hardware-repair/">
-    <link rel="icon" href="/wrs.jpg" type="image/jpeg">
-    <link rel="apple-touch-icon" href="/wrs.jpg">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta property="og:site_name" content="White Rabbit Security">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Hardware Repair | White Rabbit Security">
@@ -28,7 +31,7 @@
     <a class="skip-link" href="#main">Skip to content</a>
     <nav>
         <a href="/" class="nav-logo">
-            <img src="/wrs.jpg" alt="White Rabbit Security">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
         </a>
         <div class="nav-links">
             <a href="/">Home</a>
@@ -44,7 +47,7 @@
             <p>Advanced physical system restoration and custom modification.</p>
         </header>
         <section class="services">
-            <div class="service-card" style="max-width: 800px; margin: 0 auto;">
+            <div class="service-card narrow-card">
                 <ul class="spec-list">
                     <li><i class="fa-solid fa-microchip" aria-hidden="true"></i> <strong>Component-Level Repair:</strong> Micro-soldering and repairing damaged PCB traces.</li>
                     <li><i class="fa-solid fa-bolt" aria-hidden="true"></i> <strong>Advanced Diagnostics:</strong> Identifying root-cause electrical failures in complex logic boards.</li>
@@ -52,7 +55,7 @@
                     <li><i class="fa-solid fa-backward" aria-hidden="true"></i> <strong>Reverse Engineering:</strong> Analyzing and diagnosing undocumented industrial control units.</li>
                 </ul>
                 <div class="service-actions">
-                    <a href="/contact/?service=Hardware" class="btn btn-primary">Initiate Intake</a>
+                    <a href="/contact/?service=Hardware" class="btn btn-primary">Request a Repair</a>
                 </div>
             </div>
         </section>
@@ -60,7 +63,7 @@
     <footer class="site-footer">
         <p>&copy; 2026 White Rabbit Security</p>
         <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
-        <p><a href="/contact/">Contact</a></p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
     </footer>
 </body>
 </html>

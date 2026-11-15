@@ -1,14 +1,17 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Contact | White Rabbit Security</title>
     <meta name="description" content="Contact White Rabbit Security about an audit, data recovery, or hardware repair. Do not send passwords or sensitive data.">
     <meta name="theme-color" content="#060b13">
     <link rel="canonical" href="https://whiterabbitsecurity.app/contact/">
-    <link rel="icon" href="/wrs.jpg" type="image/jpeg">
-    <link rel="apple-touch-icon" href="/wrs.jpg">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta property="og:site_name" content="White Rabbit Security">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Contact | White Rabbit Security">
@@ -29,7 +32,7 @@
     <a class="skip-link" href="#main">Skip to content</a>
     <nav>
         <a href="/" class="nav-logo">
-            <img src="/wrs.jpg" alt="White Rabbit Security">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
         </a>
         <div class="nav-links">
             <a href="/">Home</a>
@@ -66,6 +69,10 @@
                     <input id="intake-email" type="email" name="email" class="form-control" autocomplete="email" required>
                 </div>
                 <div class="form-group">
+                    <label for="intake-company">Company <span class="optional">(optional)</span></label>
+                    <input id="intake-company" type="text" name="company" class="form-control" autocomplete="organization">
+                </div>
+                <div class="form-group">
                     <label for="intake-service">Service</label>
                     <select id="intake-service" name="service" class="form-control" required>
                         <option value="" disabled selected>Select a service</option>
@@ -76,15 +83,25 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label for="intake-timeline">Timeline <span class="optional">(optional)</span></label>
+                    <select id="intake-timeline" name="timeline" class="form-control">
+                        <option value="">No fixed date</option>
+                        <option value="Urgent">Urgent (within 2 weeks)</option>
+                        <option value="1-3 months">Within 1 to 3 months</option>
+                        <option value="Planning">Planning ahead</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="intake-message">Message</label>
-                    <textarea id="intake-message" name="message" class="form-control" required></textarea>
+                    <textarea id="intake-message" name="message" class="form-control" required aria-describedby="intake-message-hint"></textarea>
+                    <p id="intake-message-hint" class="form-hint">For an audit, a short description helps: what you want tested (apps, networks, cloud, AI), roughly how many systems, and whether a compliance requirement such as SOC 2 or PCI DSS is driving it.</p>
                 </div>
                 <div class="form-group">
                     <p class="turnstile-label" id="intake-turnstile-label">Spam check</p>
                     <div id="intake-turnstile" class="cf-turnstile turnstile-slot" data-sitekey="0x4AAAAAAEiZO1HFW-StlVeR" data-action="contact" data-theme="dark" data-size="flexible" data-error-callback="onIntakeTurnstileError" aria-labelledby="intake-turnstile-label"></div>
                     <p id="turnstile-status" class="turnstile-status" role="status"></p>
                 </div>
-                <button id="intake-submit" type="submit" class="btn btn-primary btn-block">Transmit Payload</button>
+                <button id="intake-submit" type="submit" class="btn btn-primary btn-block">Send Inquiry</button>
                 <p id="form-status" class="form-status" role="alert"></p>
             </form>
         </section>
@@ -92,9 +109,8 @@
     <footer class="site-footer">
         <p>&copy; 2026 White Rabbit Security</p>
         <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
-        <p><a href="/contact/">Contact</a></p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
     </footer>
     <script src="/js/contact.js"></script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer onerror="onIntakeTurnstileScriptError()"></script>
 </body>
 </html>

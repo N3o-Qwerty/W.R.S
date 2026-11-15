@@ -1,0 +1,11 @@
+# White Rabbit Security vulnerability disclosure contact.
+# If you believe you have found a security issue in this website,
+# please tell us through the contact form. Do not include exploit
+# payloads, credentials, or sensitive data in the first message;
+# we will reply with a channel suitable for sharing details.
+
+Contact: https://whiterabbitsecurity.app/contact/
+Expires: 2027-11-15T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://whiterabbitsecurity.app/.well-known/security.txt
+Policy: https://whiterabbitsecurity.app/privacy/#disclosure
