@@ -296,3 +296,5 @@ main:focus { outline: none; }
 .behind-card h2 { font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
 .behind-card h2 .highlight { color: var(--accent-cyan); }
 .uplink .hero-buttons { margin-bottom: 0; }
+.founder-card .spec-list { padding-left: 0; color: var(--text-muted); }
+.founder-card .spec-list strong { color: var(--text-main); }
