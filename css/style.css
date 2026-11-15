@@ -122,7 +122,8 @@ a:focus-visible, button:focus-visible, .form-control:focus-visible {
 }
 
 @media (max-width: 520px) {
-    .nav-links { width: 100%; justify-content: space-between; }
+    .nav-links { width: 100%; justify-content: space-between; gap: 8px; }
+    .nav-links a { font-size: 0.64rem; letter-spacing: 0.2px; }
 }
 
 .skip-link {
@@ -287,3 +288,11 @@ main:focus { outline: none; }
 .policy a { color: var(--accent-cyan); }
 .service-card.policy p { margin-bottom: 14px; }
 .service-card.policy p.policy-date { font-size: 0.85rem; }
+
+/* About */
+.founder-byline { color: var(--text-main) !important; font-size: 1rem; }
+.founder-byline i { color: var(--accent-cyan); margin-right: 6px; }
+.behind-card { text-align: center; }
+.behind-card h2 { font-size: 1.3rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+.behind-card h2 .highlight { color: var(--accent-cyan); }
+.uplink .hero-buttons { margin-bottom: 0; }
