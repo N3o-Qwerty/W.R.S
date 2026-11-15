@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Write-ups | White Rabbit Security</title>
+    <meta name="description" content="Walkthroughs of public TryHackMe practice rooms from White Rabbit Security, written to show the method rather than just hand over the answers.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Write-ups | White Rabbit Security">
+    <meta property="og:description" content="Walkthroughs of public TryHackMe practice rooms from White Rabbit Security, written to show the method rather than just hand over the answers.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Write-ups | White Rabbit Security">
+    <meta name="twitter:description" content="Walkthroughs of public TryHackMe practice rooms from White Rabbit Security, written to show the method rather than just hand over the answers.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Write-<span class="highlight">ups</span></h1>
+            <p>Walkthroughs of public practice rooms. We write them to show the method &mdash; how we enumerate, where the foothold comes from, and how each step leads to the next &mdash; not just to hand over the answers.</p>
+        </header>
+        <section class="services" aria-labelledby="thm-heading">
+            <h2 id="thm-heading" class="section-title">TryHackMe <span class="highlight">Rooms</span></h2>
+            <div class="services-grid">
+                <a href="/learn/writeups/silver-platter/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-utensils" aria-hidden="true"></i></div>
+                    <h3>Silver <span class="highlight">Platter</span></h3>
+                    <p>Linux &middot; Easy. A Silverpeas authentication bypass, an IDOR in private messages, and privilege escalation through a reused password in the auth log.</p>
+                </a>
+                <a href="/learn/writeups/anthem/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-feather-pointed" aria-hidden="true"></i></div>
+                    <h3>Anthem</h3>
+                    <p>Windows &middot; Easy. Careful enumeration of an Umbraco blog, credentials in robots.txt, then RDP access and a hidden-file privilege escalation.</p>
+                </a>
+                <a href="/learn/writeups/blueprint/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i></div>
+                    <h3>Blue<span class="highlight">print</span></h3>
+                    <p>Windows &middot; Easy. An exposed osCommerce installer on an old XAMPP host gives remote code execution &mdash; and, because the stack runs as SYSTEM, instant full control.</p>
+                </a>
+                <a href="/learn/writeups/chocolate-factory/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-mug-hot" aria-hidden="true"></i></div>
+                    <h3>Chocolate <span class="highlight">Factory</span></h3>
+                    <p>Linux &middot; Easy. A web command panel, a key hidden in a photo with steghide, SSH with a recovered key, and a sudo editor to root.</p>
+                </a>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="hsm-heading">
+            <h2 id="hsm-heading" class="section-title">Hack Smarter <span class="highlight">Labs</span></h2>
+            <p class="lede">Realistic, engagement-style labs from <a href="https://hacksmarter.org" target="_blank" rel="noopener noreferrer">Hack Smarter</a>, published with the creator's permission.</p>
+            <div class="services-grid">
+                <a href="/learn/writeups/welcome/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-network-wired" aria-hidden="true"></i></div>
+                    <h3>Welcome</h3>
+                    <p>Active Directory. One phished account to Domain Admin: a cracked onboarding document, a password spray, an ACL abuse chain, and an ADCS ESC1 certificate attack.</p>
+                </a>
+                <a href="/learn/writeups/martini/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-martini-glass" aria-hidden="true"></i></div>
+                    <h3>Martini</h3>
+                    <p>Active Directory. A guest-readable notes share leaks a password, a reused service account turns out to be privileged, and a secrets dump takes the domain.</p>
+                </a>
+                <a href="/learn/writeups/implicit/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i></div>
+                    <h3>Implicit</h3>
+                    <p>Web / secure code. An OAuth implicit-grant SSO trusts a username instead of the token, giving account takeover &mdash; then you patch the code and re-test.</p>
+                </a>
+                <a href="/learn/writeups/casino/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-dice" aria-hidden="true"></i></div>
+                    <h3>Casino</h3>
+                    <p>Web / Linux. A guest-WiFi portal leaks its guest database, an SSTI in a profile field gives a shell, and a careless bash history hands over root.</p>
+                </a>
+                <a href="/learn/writeups/dark/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-skull" aria-hidden="true"></i></div>
+                    <h3>Dark</h3>
+                    <p>Linux. An outdated WordPress site, a malicious plugin uploaded for code execution, and privilege escalation through a credential left in a readable log.</p>
+                </a>
+                <a href="/learn/writeups/pollution/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-bug" aria-hidden="true"></i></div>
+                    <h3>Pollution</h3>
+                    <p>Web &middot; Easy. A client-side prototype pollution gadget in a Node.js SOC app, delivered to an admin via a mail feature to read a protected page.</p>
+                </a>
+                <a href="/learn/writeups/exception/" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></div>
+                    <h3>Exception</h3>
+                    <p>Linux. A Rocket.Chat server on a port the fast scan missed, a NoSQL-injection RCE, a reused database password for SSH, and a sudo editor to root.</p>
+                </a>
+                <a href="/learn/writeups/edge/" class="service-card">
+                    <div class="service-icon"><i class="fa-brands fa-edge" aria-hidden="true"></i></div>
+                    <h3>Edge</h3>
+                    <p>Windows. An assumed-breach WinRM foothold, credentials scraped from Microsoft Edge's process memory, and a pivot through a portal and a PuTTY password to administrator.</p>
+                </a>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="writeups-note">
+            <h2 id="writeups-note" class="section-title">How We <span class="highlight">Write These</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> <strong>Labs only, with permission.</strong> We write up public practice rooms and Hack Smarter labs (shared with the creator's permission) &mdash; never a client engagement or paid course content.</li>
+                    <li><i class="fa-solid fa-eye-slash" aria-hidden="true"></i> <strong>Flags redacted.</strong> We show the commands and the reasoning but hold back the literal flag and password values, so the room is still worth doing yourself.</li>
+                    <li><i class="fa-solid fa-list-check" aria-hidden="true"></i> <strong>Method over answers.</strong> The goal is a repeatable process you can apply to a machine you have never seen.</li>
+                </ul>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/" class="btn btn-outline btn-sm">Back to Learn</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

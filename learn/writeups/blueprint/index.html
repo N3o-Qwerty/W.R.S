@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Blueprint Write-up (TryHackMe) | White Rabbit Security</title>
+    <meta name="description" content="A walkthrough of the TryHackMe Blueprint room: an exposed osCommerce installer on a high port leads to remote code execution as SYSTEM on an old Windows XAMPP host.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/blueprint/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Blueprint Write-up (TryHackMe) | White Rabbit Security">
+    <meta property="og:description" content="A walkthrough of the TryHackMe Blueprint room: an exposed osCommerce installer on a high port leads to remote code execution as SYSTEM on an old Windows XAMPP host.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/blueprint/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Blueprint Write-up (TryHackMe) | White Rabbit Security">
+    <meta name="twitter:description" content="A walkthrough of the TryHackMe Blueprint room: an exposed osCommerce installer on a high port leads to remote code execution as SYSTEM on an old Windows XAMPP host.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Blue<span class="highlight">print</span></h1>
+            <p>TryHackMe &middot; Windows &middot; Easy. An old XAMPP host runs a shopping-cart app with its installer still exposed. Because the web stack runs as SYSTEM, one request turns into full control.</p>
+            <p class="lede">Targets and flag values are from a shared practice environment and are redacted here. The point is the method, not the answers.</p>
+        </header>
+
+        <section class="services" aria-labelledby="b-recon">
+            <h2 id="b-recon" class="section-title">1. <span class="highlight">Recon</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Scan everything, then fingerprint each service.</p>
+                <pre class="code-block"><code>nmap -p- --min-rate 1000 -oA scans/all-ports TARGET
+nmap -p 80,135,139,443,445,3306,8080 -sC -sV -oA scans/services TARGET</code></pre>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-window-maximize" aria-hidden="true"></i> <strong>80/tcp</strong> &mdash; Microsoft IIS 7.5 (an empty 404 site).</li>
+                    <li><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i> <strong>443 &amp; 8080/tcp</strong> &mdash; Apache 2.4.23 with PHP 5.6.28. That is the signature of an old <strong>XAMPP</strong> install, and both serve open directory listings.</li>
+                    <li><i class="fa-solid fa-folder-open" aria-hidden="true"></i> <strong>445/tcp</strong> &mdash; SMB on Windows 7 Home Basic SP1, signing disabled.</li>
+                    <li><i class="fa-solid fa-database" aria-hidden="true"></i> <strong>3306/tcp</strong> &mdash; MariaDB.</li>
+                </ul>
+                <p>An unpatched Windows 7 box running an ageing XAMPP stack is a strong lead. The directory listing on <code>8080</code> is where to look next.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="b-enum">
+            <h2 id="b-enum" class="section-title">2. Finding the <span class="highlight">Application</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Browsing the listing on <code>8080</code> reveals an <strong>osCommerce 2.3.4</strong> shop. Two quick checks matter: the version, and whether the <code>install/</code> directory is still reachable.</p>
+                <pre class="code-block"><code>curl http://TARGET:8080/oscommerce-2.3.4/catalog/install/install.php</code></pre>
+                <p>It is. A live installer on a production app is a classic finding on its own &mdash; it often allows re-configuration, and in this version it allows code execution.</p>
+                <p>A quick look at SMB confirms guest access is open, which is worth noting even though we will not need it.</p>
+                <pre class="code-block"><code>nxc smb TARGET
+smbclient -N //TARGET/Users</code></pre>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="b-rce">
+            <h2 id="b-rce" class="section-title">3. Installer <span class="highlight">RCE</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>osCommerce 2.3.4 has a known remote code execution flaw: when the installer is still present, the <code>install.php?step=4</code> flow can be abused to inject system commands (Exploit-DB <strong>50128</strong>). Point the public proof of concept at the exposed installer.</p>
+                <pre class="code-block"><code>searchsploit -m 50128
+python3 50128.py http://TARGET:8080/oscommerce-2.3.4/catalog/install/install.php?step=4</code></pre>
+                <p>That drops into a command shell on the host.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="b-system">
+            <h2 id="b-system" class="section-title">4. Already <span class="highlight">SYSTEM</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Check who the shell runs as before reaching for any privilege escalation.</p>
+                <pre class="code-block"><code>whoami
+# nt authority\system</code></pre>
+                <p>There is nothing to escalate. On this host XAMPP's Apache runs as <code>LocalSystem</code>, so code execution through the web app is already the highest privilege on the machine. Both the user and root flags are readable directly.</p>
+                <p>While looting, a <code>passwords.txt</code> left by XAMPP lists its default credentials (phpMyAdmin with a blank root password, the default WebDAV account, and so on) &mdash; a reminder of how much a default install leaves lying around.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="b-lessons">
+            <h2 id="b-lessons" class="section-title">What To <span class="highlight">Take Away</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-plug-circle-xmark" aria-hidden="true"></i> Delete installers once setup is done. A live installer is a standing invitation.</li>
+                    <li><i class="fa-solid fa-user-shield" aria-hidden="true"></i> Do not run a web server as SYSTEM. If the stack had dropped privileges, this would have been a low-privilege shell, not game over.</li>
+                    <li><i class="fa-solid fa-box-archive" aria-hidden="true"></i> Old bundled stacks (XAMPP, legacy PHP) carry known CVEs. Match the version to public exploits early.</li>
+                    <li><i class="fa-solid fa-folder-open" aria-hidden="true"></i> Open directory listings and guest SMB shares hand an attacker a map for free.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-flag" aria-hidden="true"></i></div>
+                <h2>Try It <span class="highlight">Yourself</span></h2>
+                <p>Blueprint is a free room on TryHackMe. Attempt it first, then compare your path with this one.</p>
+                <div class="hero-buttons">
+                    <a href="https://tryhackme.com/room/blueprint" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open on TryHackMe</a>
+                    <a href="/learn/writeups/" class="btn btn-outline">All write-ups</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/writeups/" class="btn btn-outline btn-sm">Back to Write-ups</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

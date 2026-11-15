@@ -299,3 +299,14 @@ main:focus { outline: none; }
 .founder-card .spec-list { padding-left: 0; color: var(--text-muted); }
 .founder-card .spec-list strong { color: var(--text-main); }
 .service-card.policy p.cred-note { font-size: 0.85rem; margin: 16px 0 0; }
+.sample-report { text-align: center; }
+.sample-report .service-icon { margin-left: auto; margin-right: auto; }
+
+/* Learn section */
+.code-block { background: var(--nav-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 14px; overflow-x: auto; margin: 0 0 18px; }
+.code-block code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.9rem; color: var(--accent-cyan); white-space: pre; }
+.sheet h3 { font-size: 0.95rem; text-transform: none; letter-spacing: 0; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
+.sheet .code-block:last-child { margin-bottom: 0; }
+.process-list p.stage-meta { margin-top: 8px; font-size: 0.9rem; }
+.process-list p.stage-meta strong { color: var(--text-main); }
+.hero .callout-critical { margin-top: 14px; font-size: 0.95rem; }

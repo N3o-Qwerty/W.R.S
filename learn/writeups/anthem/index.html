@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Anthem Write-up (TryHackMe) | White Rabbit Security</title>
+    <meta name="description" content="A walkthrough of the TryHackMe Anthem room: patient enumeration of an Umbraco blog, credentials hidden in robots.txt, RDP access, and a hidden-file privilege escalation on Windows.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/anthem/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Anthem Write-up (TryHackMe) | White Rabbit Security">
+    <meta property="og:description" content="A walkthrough of the TryHackMe Anthem room: patient enumeration of an Umbraco blog, credentials hidden in robots.txt, RDP access, and a hidden-file privilege escalation on Windows.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/anthem/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Anthem Write-up (TryHackMe) | White Rabbit Security">
+    <meta name="twitter:description" content="A walkthrough of the TryHackMe Anthem room: patient enumeration of an Umbraco blog, credentials hidden in robots.txt, RDP access, and a hidden-file privilege escalation on Windows.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Anthem</h1>
+            <p>TryHackMe &middot; Windows &middot; Easy. No brute forcing &mdash; just careful reading. An Umbraco blog, a password left in robots.txt, RDP access, and a hidden file that owns the box.</p>
+            <p class="lede">Targets and flag values are from a shared practice environment and are redacted here. The point is the method, not the answers.</p>
+        </header>
+
+        <section class="services" aria-labelledby="a-recon">
+            <h2 id="a-recon" class="section-title">1. <span class="highlight">Recon</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The host does not answer ping, so a default scan reports it as down. Skip host discovery with <code>-Pn</code> and scan anyway.</p>
+                <pre class="code-block"><code>nmap -Pn -p- --min-rate 1000 -oA scans/all-ports TARGET
+nmap -Pn -p 80,3389 -sC -sV -oA scans/services TARGET</code></pre>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-globe" aria-hidden="true"></i> <strong>80/tcp &mdash; HTTP.</strong> An Umbraco CMS blog (the Articulate theme).</li>
+                    <li><i class="fa-solid fa-desktop" aria-hidden="true"></i> <strong>3389/tcp &mdash; RDP.</strong> Remote Desktop, which will matter once we have credentials.</li>
+                </ul>
+                <p class="lede">Lesson one of the room: a &ldquo;host down&rdquo; result often just means ICMP is filtered. Always confirm with <code>-Pn</code>.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="a-enum">
+            <h2 id="a-enum" class="section-title">2. Reading the <span class="highlight">Blog</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>This room rewards slow reading. The flags and clues are scattered through the site itself.</p>
+                <pre class="code-block"><code>gobuster dir -u http://TARGET -w /usr/share/wordlists/dirbuster/directory-list-2.3-medium.txt</code></pre>
+                <h3>What the pages give up</h3>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-flag" aria-hidden="true"></i> <strong>Flags in the source.</strong> Several flags are tucked into HTML comments, a search placeholder, and author pages &mdash; view-source is your friend.</li>
+                    <li><i class="fa-solid fa-user" aria-hidden="true"></i> <strong>A name and an email pattern.</strong> Posts and author pages reveal the admin's full name and the company email format (first initial / name @ the domain).</li>
+                    <li><i class="fa-solid fa-feather" aria-hidden="true"></i> <strong>A poem about the admin.</strong> A blog post written in his honour is a strong hint about where the password lives.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="a-creds">
+            <h2 id="a-creds" class="section-title">3. The Password in <span class="highlight">robots.txt</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Always check <code>robots.txt</code>. Besides the usual <code>Disallow</code> rules for the Umbraco directories, there is a stray line that is clearly a password left in the open.</p>
+                <pre class="code-block"><code>curl http://TARGET/robots.txt</code></pre>
+                <p>Combine that password with the admin's email (worked out from the blog) and log in to Umbraco at <code>/umbraco</code>. The CMS panel itself has nothing useful &mdash; but the same credentials are what matter next.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="a-rdp">
+            <h2 id="a-rdp" class="section-title">4. Foothold over <span class="highlight">RDP</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The admin reused that password for his Windows account, so the web credentials get us an interactive desktop over RDP.</p>
+                <pre class="code-block"><code>xfreerdp /u:USER /p:PASS /v:TARGET /dynamic-resolution</code></pre>
+                <p>The user flag is sitting on the desktop.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="a-priv">
+            <h2 id="a-priv" class="section-title">5. Privilege <span class="highlight">Escalation</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The administrator password is stashed in a hidden file on the system drive. List hidden files to find it.</p>
+                <pre class="code-block"><code>dir /a:h C:\</code></pre>
+                <p>The file cannot be read from the command line as our user, but we <em>own</em> it &mdash; so we open its properties in Explorer, take ownership, grant ourselves read, and open it. Inside is the administrator password.</p>
+                <p>Logging in as <code>Administrator</code> with that password gives full control, and the root flag follows.</p>
+                <h3>Why it worked</h3>
+                <p>&ldquo;Hidden&rdquo; is not a permission. A hidden file you own is still yours to re-permission, and secrets stored in a file on disk are only as safe as the file's ACL.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="a-lessons">
+            <h2 id="a-lessons" class="section-title">What To <span class="highlight">Take Away</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-ghost" aria-hidden="true"></i> A filtered ping is not a dead host. Confirm with <code>-Pn</code>.</li>
+                    <li><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> Read the content and the page source. Half of this room is hidden in plain sight.</li>
+                    <li><i class="fa-solid fa-robot" aria-hidden="true"></i> Check <code>robots.txt</code> every time.</li>
+                    <li><i class="fa-solid fa-key" aria-hidden="true"></i> One password reused across the CMS, RDP, and a stored file is what chains the whole box together.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-flag" aria-hidden="true"></i></div>
+                <h2>Try It <span class="highlight">Yourself</span></h2>
+                <p>Anthem is a free, beginner-friendly room on TryHackMe. Attempt it before reading this, then compare your path.</p>
+                <div class="hero-buttons">
+                    <a href="https://tryhackme.com/room/anthem" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open on TryHackMe</a>
+                    <a href="/learn/writeups/" class="btn btn-outline">All write-ups</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/writeups/" class="btn btn-outline btn-sm">Back to Write-ups</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

