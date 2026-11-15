@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Bender: AI Security Practice Room | White Rabbit Security</title>
+    <meta name="description" content="Bender is a TryHackMe practice room from White Rabbit Security covering prompt injection against an AI application and Linux privilege escalation.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/bender/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Bender: AI Security Practice Room | White Rabbit Security">
+    <meta property="og:description" content="Bender is a TryHackMe practice room from White Rabbit Security covering prompt injection against an AI application and Linux privilege escalation.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/bender/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Bender: AI Security Practice Room | White Rabbit Security">
+    <meta name="twitter:description" content="Bender is a TryHackMe practice room from White Rabbit Security covering prompt injection against an AI application and Linux privilege escalation.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Bender <span class="highlight">Room</span></h1>
+            <p>A practice room we built and published on TryHackMe. It combines an attack on an AI application with classic Linux privilege escalation.</p>
+        </header>
+        <section class="services" aria-labelledby="bender-learn">
+            <h2 id="bender-learn" class="section-title">What You <span class="highlight">Practise</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-comments" aria-hidden="true"></i> <strong>Prompt injection.</strong> How instructions hidden in user input can change what an AI application does.</li>
+                    <li><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> <strong>What the model can reach.</strong> Why the data and tools connected to an AI application matter more than the model itself.</li>
+                    <li><i class="fa-solid fa-arrow-up-right-dots" aria-hidden="true"></i> <strong>Linux privilege escalation.</strong> Moving from a low-privilege foothold to full control of the machine.</li>
+                </ul>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="bender-hints">
+            <h2 id="bender-hints" class="section-title">Spoiler-Free <span class="highlight">Hints</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-1" aria-hidden="true"></i> <strong>Talk to it first.</strong> Find out what the assistant is supposed to do before trying to make it do something else.</li>
+                    <li><i class="fa-solid fa-2" aria-hidden="true"></i> <strong>Ask what it can access.</strong> An assistant often knows more about its own setup than it should reveal.</li>
+                    <li><i class="fa-solid fa-3" aria-hidden="true"></i> <strong>Enumerate after the foothold.</strong> Once you have a shell, the normal Linux checks apply. Go through them in order.</li>
+                </ul>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="bender-play">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-flag" aria-hidden="true"></i></div>
+                <h2 id="bender-play">Play the <span class="highlight">Room</span></h2>
+                <p>Search for &ldquo;Bender&rdquo; on TryHackMe to start the room. New to AI security? Read the OWASP Top 10 for LLM Applications first.</p>
+                <div class="hero-buttons">
+                    <a href="https://tryhackme.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open TryHackMe</a>
+                    <a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">OWASP LLM Top 10</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/" class="btn btn-outline btn-sm">Back to Learn</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

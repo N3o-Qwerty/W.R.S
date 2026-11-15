@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Cheat Sheets | White Rabbit Security</title>
+    <meta name="description" content="Quick references for Nmap and NetExec, and a first-pass checklist for practice machines.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/cheat-sheets/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Cheat Sheets | White Rabbit Security">
+    <meta property="og:description" content="Quick references for Nmap and NetExec, and a first-pass checklist for practice machines.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/cheat-sheets/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Cheat Sheets | White Rabbit Security">
+    <meta name="twitter:description" content="Quick references for Nmap and NetExec, and a first-pass checklist for practice machines.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Cheat <span class="highlight">Sheets</span></h1>
+            <p>Quick references for lab work and capture-the-flag practice.</p>
+            <p class="callout-critical">Only test systems you own or have written permission to test. Practice on labs built for it.</p>
+        </header>
+        <section class="services" aria-labelledby="nmap-heading">
+            <h2 id="nmap-heading" class="section-title">Nmap <span class="highlight">Quick Reference</span></h2>
+            <p class="lede">Replace TARGET with the address of your lab machine.</p>
+            <div class="service-card prose-card sheet">
+                <h3>Default scripts and version detection, saved in all formats</h3>
+                <pre class="code-block"><code>nmap -sC -sV -oA scans/initial TARGET</code></pre>
+                <h3>All 65,535 TCP ports</h3>
+                <pre class="code-block"><code>nmap -p- --min-rate 1000 -oA scans/all-ports TARGET</code></pre>
+                <h3>Detailed scan of specific ports</h3>
+                <pre class="code-block"><code>nmap -p 22,80,445 -sC -sV TARGET</code></pre>
+                <h3>Top UDP ports (slow; needs root)</h3>
+                <pre class="code-block"><code>sudo nmap -sU --top-ports 20 TARGET</code></pre>
+                <h3>Skip host discovery when ping is blocked</h3>
+                <pre class="code-block"><code>nmap -Pn TARGET</code></pre>
+                <h3>Find live hosts on a lab network</h3>
+                <pre class="code-block"><code>nmap -sn 10.10.10.0/24</code></pre>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="nxc-heading">
+            <h2 id="nxc-heading" class="section-title">NetExec <span class="highlight">Quick Reference</span></h2>
+            <p class="lede">NetExec (nxc) tests Windows and Active Directory services. USER and PASS are credentials you are authorized to use.</p>
+            <div class="service-card prose-card sheet">
+                <h3>Find Windows hosts and see names, domains, and SMB signing</h3>
+                <pre class="code-block"><code>nxc smb 10.10.10.0/24</code></pre>
+                <h3>Check credentials and list shares</h3>
+                <pre class="code-block"><code>nxc smb TARGET -u USER -p PASS --shares</code></pre>
+                <h3>List domain users</h3>
+                <pre class="code-block"><code>nxc smb TARGET -u USER -p PASS --users</code></pre>
+                <h3>Show the password policy before any guessing</h3>
+                <pre class="code-block"><code>nxc smb TARGET -u USER -p PASS --pass-pol</code></pre>
+                <h3>Test one password across a user list</h3>
+                <pre class="code-block"><code>nxc smb TARGET -u users.txt -p PASS --continue-on-success</code></pre>
+                <h3>Run a command over WinRM</h3>
+                <pre class="code-block"><code>nxc winrm TARGET -u USER -p PASS -x whoami</code></pre>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="check-heading">
+            <h2 id="check-heading" class="section-title">Practice Machine <span class="highlight">Checklist</span></h2>
+            <p class="lede">A first pass for any lab machine. Most of the work is enumeration.</p>
+            <ol class="process-list">
+                <li>
+                    <h3>Scan</h3>
+                    <p>Run a full TCP port scan, then a detailed scan of the open ports.</p>
+                </li>
+                <li>
+                    <h3>Enumerate each service</h3>
+                    <p>For every open port, find the software and version and look at what it exposes without logging in.</p>
+                </li>
+                <li>
+                    <h3>Web</h3>
+                    <p>Browse the site by hand first. Then look for hidden directories, login pages, file uploads, and parameters.</p>
+                </li>
+                <li>
+                    <h3>Credentials</h3>
+                    <p>Note every username, password, and key you find, and try them on every service.</p>
+                </li>
+                <li>
+                    <h3>Foothold</h3>
+                    <p>Pick the most likely weakness, test it, and keep notes on what you tried.</p>
+                </li>
+                <li>
+                    <h3>Privilege escalation</h3>
+                    <p>Check who you are, what you can run, scheduled tasks, unusual files, and stored credentials.</p>
+                </li>
+                <li>
+                    <h3>Write it up</h3>
+                    <p>Record each step with the command and its output while it is fresh.</p>
+                </li>
+            </ol>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/" class="btn btn-outline btn-sm">Back to Learn</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

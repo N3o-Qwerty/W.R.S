@@ -39,38 +39,122 @@
             <a href="/about/">About</a>
             <a href="/news/">News</a>
             <a href="/contact/">Contact</a>
-            <a href="/resources/" class="active" aria-current="page">Resources</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
         </div>
     </nav>
 
     <main id="main" tabindex="-1">
         <header class="hero">
             <h1>Security <span class="highlight">Resources</span></h1>
-            <p>Curated intelligence databases, training grounds, and technical references.</p>
+            <p>Training platforms, references, and news sources we use, with a note on what each is good for.</p>
         </header>
-
-        <section class="services">
+        <section class="services" aria-labelledby="res-learn">
+            <h2 id="res-learn" class="section-title">Learn and <span class="highlight">Train</span></h2>
             <div class="services-grid">
-
-                <a href="https://hacksmarter.org" target="_blank" rel="noopener noreferrer" class="service-card">
+                <a href="https://tryhackme.com" target="_blank" rel="noopener noreferrer" class="service-card">
                     <div class="service-icon"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i></div>
-                    <h3>Hack <span class="highlight">Smarter</span></h3>
-                    <p>Advanced community-driven learning paths and cybersecurity guides.</p>
+                    <h3>Try <span class="highlight">HackMe</span></h3>
+                    <p>Guided, beginner-friendly paths and rooms. The best place to start from zero.</p>
                 </a>
-
+                <a href="https://academy.hackthebox.com" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-cube" aria-hidden="true"></i></div>
+                    <h3>HTB <span class="highlight">Academy</span></h3>
+                    <p>In-depth modules with hands-on exercises, organized by skill and job role.</p>
+                </a>
                 <a href="https://portswigger.net/web-security" target="_blank" rel="noopener noreferrer" class="service-card">
                     <div class="service-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
                     <h3>PortSwigger <span class="highlight">Academy</span></h3>
-                    <p>Industry-standard web vulnerability labs, training courses, and exploit modules.</p>
+                    <p>Free web security labs covering every major vulnerability class.</p>
                 </a>
-
+                <a href="https://hacksmarter.org" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-users" aria-hidden="true"></i></div>
+                    <h3>Hack <span class="highlight">Smarter</span></h3>
+                    <p>Community-driven learning paths and cybersecurity guides.</p>
+                </a>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="res-practice">
+            <h2 id="res-practice" class="section-title">Practice <span class="highlight">Grounds</span></h2>
+            <div class="services-grid">
+                <a href="https://www.hackthebox.com" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-server" aria-hidden="true"></i></div>
+                    <h3>Hack The <span class="highlight">Box</span></h3>
+                    <p>Realistic machines to attack, from easy to very hard. Retired machines have walkthroughs.</p>
+                </a>
+                <a href="https://overthewire.org/wargames/" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-terminal" aria-hidden="true"></i></div>
+                    <h3>OverThe <span class="highlight">Wire</span></h3>
+                    <p>Wargames played over SSH. Bandit is the classic way to learn the Linux command line.</p>
+                </a>
+                <a href="https://picoctf.org" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-flag" aria-hidden="true"></i></div>
+                    <h3>pico <span class="highlight">CTF</span></h3>
+                    <p>A free, beginner-level capture-the-flag with a year-round practice area.</p>
+                </a>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="res-reference">
+            <h2 id="res-reference" class="section-title">Technical <span class="highlight">References</span></h2>
+            <div class="services-grid">
+                <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-book-open" aria-hidden="true"></i></div>
+                    <h3>OWASP <span class="highlight">WSTG</span></h3>
+                    <p>The standard methodology for testing web applications.</p>
+                </a>
                 <a href="https://book.hacktricks.xyz" target="_blank" rel="noopener noreferrer" class="service-card">
                     <div class="service-icon"><i class="fa-solid fa-book" aria-hidden="true"></i></div>
                     <h3>Hack <span class="highlight">Tricks</span></h3>
-                    <p>The comprehensive pentesting encyclopedia, methodology guide, and bypass reference.</p>
+                    <p>A large encyclopedia of techniques, organized by service and platform.</p>
                 </a>
-
+                <a href="https://gtfobins.github.io" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></div>
+                    <h3>GTFO <span class="highlight">Bins</span></h3>
+                    <p>How common Unix programs can be misused for privilege escalation.</p>
+                </a>
+                <a href="https://lolbas-project.github.io" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-window-maximize" aria-hidden="true"></i></div>
+                    <h3>LOL <span class="highlight">BAS</span></h3>
+                    <p>The Windows counterpart: built-in programs that can be misused.</p>
+                </a>
+                <a href="https://attack.mitre.org" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-sitemap" aria-hidden="true"></i></div>
+                    <h3>MITRE <span class="highlight">ATT&amp;CK</span></h3>
+                    <p>A knowledge base of real attacker tactics and techniques.</p>
+                </a>
+                <a href="https://genai.owasp.org/llm-top-10/" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-robot" aria-hidden="true"></i></div>
+                    <h3>OWASP <span class="highlight">LLM Top 10</span></h3>
+                    <p>The main risks in applications built on large language models.</p>
+                </a>
             </div>
+        </section>
+        <section class="services" aria-labelledby="res-current">
+            <h2 id="res-current" class="section-title">Stay <span class="highlight">Current</span></h2>
+            <div class="services-grid">
+                <a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i></div>
+                    <h3>CISA <span class="highlight">KEV</span></h3>
+                    <p>Vulnerabilities confirmed as exploited in real attacks. Patch these first.</p>
+                </a>
+                <a href="https://nvd.nist.gov" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-database" aria-hidden="true"></i></div>
+                    <h3>NIST <span class="highlight">NVD</span></h3>
+                    <p>The US national database of published vulnerabilities and their scores.</p>
+                </a>
+                <a href="https://krebsonsecurity.com" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-newspaper" aria-hidden="true"></i></div>
+                    <h3>Krebs on <span class="highlight">Security</span></h3>
+                    <p>Investigative reporting on cybercrime and breaches.</p>
+                </a>
+                <a href="https://www.bleepingcomputer.com" target="_blank" rel="noopener noreferrer" class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-rss" aria-hidden="true"></i></div>
+                    <h3>Bleeping <span class="highlight">Computer</span></h3>
+                    <p>Daily security news, with a focus on ransomware and active threats.</p>
+                </a>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/" class="btn btn-outline btn-sm">Back to Learn</a></div>
         </section>
     </main>
     <footer class="site-footer">
