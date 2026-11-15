@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>White Rabbit Security</title>
     <meta name="description" content="Information security audits, data recovery, and computer repair from White Rabbit Security.">
     <meta name="theme-color" content="#060b13">
     <link rel="canonical" href="https://whiterabbitsecurity.app/">
-    <link rel="icon" href="/wrs.jpg" type="image/jpeg">
-    <link rel="apple-touch-icon" href="/wrs.jpg">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta property="og:site_name" content="White Rabbit Security">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="White Rabbit Security">
@@ -23,17 +26,60 @@
     <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/css/style.css">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "White Rabbit Security",
+        "url": "https://whiterabbitsecurity.app/",
+        "logo": "https://whiterabbitsecurity.app/img/favicon-192.png",
+        "image": "https://whiterabbitsecurity.app/wrs.jpg",
+        "description": "Information security audits, data recovery, and computer repair from White Rabbit Security.",
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Services",
+            "itemListElement": [
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "InfoSec Audits",
+                        "url": "https://whiterabbitsecurity.app/services/infosec-audits/",
+                        "description": "Authorized assessments of networks, applications, wireless, and AI systems."
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Data Recovery",
+                        "url": "https://whiterabbitsecurity.app/services/data-recovery/"
+                    }
+                },
+                {
+                    "@type": "Offer",
+                    "itemOffered": {
+                        "@type": "Service",
+                        "name": "Hardware Repair",
+                        "url": "https://whiterabbitsecurity.app/services/hardware-repair/"
+                    }
+                }
+            ]
+        }
+    }
+    </script>
 </head>
 <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
     <nav>
         <a href="/" class="nav-logo">
-            <img src="/wrs.jpg" alt="White Rabbit Security">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
         </a>
         <div class="nav-links">
             <a href="/" class="active" aria-current="page">Home</a>
             <a href="/services/">Services</a>
+            <a href="/about/">About</a>
             <a href="/news/">News</a>
             <a href="/contact/">Contact</a>
             <a href="/resources/">Resources</a>
@@ -85,12 +131,19 @@
 
             </div>
         </section>
+        <section class="services" aria-labelledby="behind-heading">
+            <div class="service-card prose-card behind-card">
+                <h2 id="behind-heading">Behind <span class="highlight">WRS</span></h2>
+                <p>White Rabbit Security is an independent firm focused on penetration testing, vulnerability research, and hardware security. It was founded by an OSCP and CompTIA Security+ certified tester who previously ran production IT infrastructure. That experience of measuring, isolating, and proving the root cause shapes every engagement: manual testing first, with tooling written for your stack where it helps.</p>
+                <div class="service-actions"><a href="/about/" class="btn btn-outline btn-sm">More About WRS</a></div>
+            </div>
+        </section>
     </main>
 
     <footer class="site-footer">
         <p>&copy; 2026 White Rabbit Security</p>
         <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
-        <p><a href="/contact/">Contact</a></p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
     </footer>
 </body>
 </html>

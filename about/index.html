@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>About | White Rabbit Security</title>
+    <meta name="description" content="White Rabbit Security is a boutique penetration testing and vulnerability research firm built on hands-on diagnostic experience, from industrial hardware to web applications.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/about/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="About | White Rabbit Security">
+    <meta property="og:description" content="White Rabbit Security is a boutique penetration testing and vulnerability research firm built on hands-on diagnostic experience, from industrial hardware to web applications.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/about/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="About | White Rabbit Security">
+    <meta name="twitter:description" content="White Rabbit Security is a boutique penetration testing and vulnerability research firm built on hands-on diagnostic experience, from industrial hardware to web applications.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/" class="active" aria-current="page">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/resources/">Resources</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>About <span class="highlight">WRS</span></h1>
+            <p>A boutique penetration testing and vulnerability research firm. We find the flaws that off-the-shelf scanners miss, and explain how to fix them.</p>
+        </header>
+
+        <section class="services" aria-labelledby="firm-heading">
+            <h2 id="firm-heading" class="section-title">Who <span class="highlight">We Are</span></h2>
+            <div class="service-card prose-card policy">
+                <p>White Rabbit Security combines hands-on manual testing with automation we build ourselves. Scanners are useful for coverage, but the findings that matter most usually come from someone who understands how the system is supposed to work and then asks how it breaks.</p>
+                <p>WRS was founded on a simple premise: complex systems need cross-disciplinary thinking. Our approach draws on both physical hardware work and digital security testing, so we look at the whole attack surface, from embedded devices and bare-metal Linux to cloud-hosted applications and APIs.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="edge-heading">
+            <h2 id="edge-heading" class="section-title">Our <span class="highlight">Edge</span></h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-user-shield" aria-hidden="true"></i></div>
+                    <h3>Manual-First Testing</h3>
+                    <p>Testing is done by hand with proven tools such as Burp Suite, Nmap, and NetExec. Where source code is in scope, we write custom Semgrep rules for your stack. Every finding is confirmed manually before it reaches your report.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-microchip" aria-hidden="true"></i></div>
+                    <h3>Hardware to Cloud</h3>
+                    <p>From board-level and embedded device security to exposed services and unauthenticated endpoints, we understand how each layer of a system can be reached and abused.</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></div>
+                    <h3>Diagnostic Rigor</h3>
+                    <p>Years of troubleshooting production networks and systems shape how we test: isolate the fault, prove it, and trace it back to the cause so the fix holds.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="founder-heading">
+            <h2 id="founder-heading" class="section-title">About the <span class="highlight">Founder</span></h2>
+            <div class="service-card prose-card policy founder-card">
+                <p class="founder-byline"><i class="fa-solid fa-user-secret" aria-hidden="true"></i> <strong>n30</strong>, Founder &middot; OSCP, CompTIA Security+</p>
+                <p>I came to offensive security from the operations side. Before founding White Rabbit Security, I ran IT for an industrial business: the network, IP camera systems, endpoints, and helpdesk that kept it running. Being the person responsible for defending that network is what led me to attacking networks professionally.</p>
+                <p>That background shapes how I test. I approach every system the way I approached production problems: measure, isolate, prove the root cause, and explain the fix in plain terms. You don&rsquo;t get raw scanner output from me. Every finding is confirmed by hand, reproduced, and written up so your team can act on it.</p>
+                <p>I also work below the software layer, with micro-soldering, PCB design, and embedded hardware, which helps when an assessment includes physical devices.</p>
+
+                <h2>Credentials and Work</h2>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-certificate" aria-hidden="true"></i> <strong>OffSec Certified Professional (OSCP)</strong></li>
+                    <li><i class="fa-solid fa-certificate" aria-hidden="true"></i> <strong>CompTIA Security+</strong> (SY0-701)</li>
+                    <li><i class="fa-solid fa-certificate" aria-hidden="true"></i> TryHackMe <strong>Cyber Security 101 (SEC1)</strong> and <strong>Pre Security (SEC0)</strong></li>
+                    <li><i class="fa-solid fa-flag" aria-hidden="true"></i> <strong>Author of &ldquo;Bender&rdquo;</strong>, a published TryHackMe room covering prompt injection against an AI application and Linux privilege escalation.</li>
+                    <li><i class="fa-solid fa-code" aria-hidden="true"></i> <strong>Code review:</strong> custom Semgrep rules that flag unauthenticated endpoints, variable-extraction bugs, and path traversal in PHP and Node.js applications.</li>
+                </ul>
+                <p class="cred-note">Credential verification is available to clients on request during scoping.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="work-heading">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></div>
+                <h2 id="work-heading">Work <span class="highlight">With Us</span></h2>
+                <p>Every engagement is scoped and authorized in writing before testing starts. See how an audit runs, or tell us what you want tested.</p>
+                <div class="hero-buttons">
+                    <a href="/services/infosec-audits/" class="btn btn-outline">How Audits Work</a>
+                    <a href="/contact/?service=Infosec" class="btn btn-primary">Start a Conversation</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>

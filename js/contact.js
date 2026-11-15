@@ -22,6 +22,14 @@
     };
 
     if (turnstileSlot) {
+        // Loaded here rather than with a <script> tag so the error handler
+        // needs no inline attribute (the Content-Security-Policy blocks those).
+        var turnstileScript = document.createElement('script');
+        turnstileScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+        turnstileScript.async = true;
+        turnstileScript.onerror = window.onIntakeTurnstileScriptError;
+        document.head.appendChild(turnstileScript);
+
         var turnstileTimer = window.setTimeout(function () {
             if (!window.turnstile) {
                 setTurnstileStatus('The spam check could not be loaded. You can still send this message.');
