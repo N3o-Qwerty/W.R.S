@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Implicit Write-up (Hack Smarter) | White Rabbit Security</title>
+    <meta name="description" content="A walkthrough of the Hack Smarter Implicit web lab: an OAuth implicit-grant SSO that trusts a username instead of validating the token, leading to account takeover, plus the secure-code fix.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/implicit/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Implicit Write-up (Hack Smarter) | White Rabbit Security">
+    <meta property="og:description" content="A walkthrough of the Hack Smarter Implicit web lab: an OAuth implicit-grant SSO that trusts a username instead of validating the token, leading to account takeover, plus the secure-code fix.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/implicit/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Implicit Write-up (Hack Smarter) | White Rabbit Security">
+    <meta name="twitter:description" content="A walkthrough of the Hack Smarter Implicit web lab: an OAuth implicit-grant SSO that trusts a username instead of validating the token, leading to account takeover, plus the fix.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Implicit</h1>
+            <p>Hack Smarter &middot; Web / Secure Code &middot; An SSO built on the OAuth implicit grant trusts a username instead of the token it was handed. That one shortcut is full account takeover &mdash; and this lab asks you to both exploit it and patch it.</p>
+            <p class="lede">A Hack Smarter lab, shared with permission. Exploitation is described at a methodological level; credentials are redacted.</p>
+        </header>
+
+        <section class="services" aria-labelledby="i-recon">
+            <h2 id="i-recon" class="section-title">1. <span class="highlight">Recon</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>A quick scan shows a Python/Flask login app on 80 (&ldquo;HackSmarter ID&rdquo;), a <strong>Gitea</strong> server on 3000 with its own SSH on 222, and normal SSH on 22. The brief gives two objectives: test the SSO, then fix the code via Gitea's CI/CD.</p>
+                <pre class="code-block"><code>nmap -p- --min-rate 1000 -oA scans/all-ports TARGET
+nmap -p 22,80,222,3000 -sC -sV -oA scans/services TARGET</code></pre>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="i-flow">
+            <h2 id="i-flow" class="section-title">2. Understand the <span class="highlight">Flow</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The app uses the OAuth <strong>implicit grant</strong>: after login, the identity provider sends an access token straight back to the browser, and the application reads the signed-in user from that response. The weakness is <em>how</em> the app decides who you are.</p>
+                <p>Proxy the login and read the callback. The application establishes the session from a <strong>username / identity field</strong> in the response rather than by validating the token's signature and claims server-side. In other words, the app trusts a value the client controls.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="i-exploit">
+            <h2 id="i-exploit" class="section-title">3. Account <span class="highlight">Takeover</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Because identity comes from a client-controlled field and not from a verified token, changing that field to another account's identity logs you in as them. Capture your own callback, swap the identity value to a privileged user (for example the admin), and forward it.</p>
+                <pre class="code-block"><code># conceptually: intercept the implicit-grant callback and change the
+# identity the app trusts, e.g. user=you  ->  user=admin
+# the app never checks the token actually belongs to that identity</code></pre>
+                <p>The session comes back as the target account. This is the <strong>implicit-trust</strong> flaw the lab is named for: the token is treated as proof of a login event, but the <em>identity</em> is taken from an unverified parameter.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="i-fix">
+            <h2 id="i-fix" class="section-title">4. The Secure-Code <span class="highlight">Fix</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Objective two: log in to Gitea with the provided student account, find <code>app.py</code>, and patch the flaw. Any commit is pushed to production by the pipeline, so verify by re-testing afterwards.</p>
+                <p>The fix is to stop trusting client-supplied identity and derive the user <em>only</em> from a validated token:</p>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-signature" aria-hidden="true"></i> Verify the token's signature against the provider's key before reading anything from it.</li>
+                    <li><i class="fa-solid fa-user-check" aria-hidden="true"></i> Take the identity from the verified token's subject claim, never from a separate username field in the request.</li>
+                    <li><i class="fa-solid fa-list-check" aria-hidden="true"></i> Check the audience, issuer, and expiry, and reject anything that fails.</li>
+                    <li><i class="fa-solid fa-code-branch" aria-hidden="true"></i> Commit, let the pipeline deploy, then re-run the takeover to confirm it now fails.</li>
+                </ul>
+                <p class="lede">For browser-based apps, the implicit grant is discouraged in current OAuth guidance in favour of the authorization-code flow with PKCE &mdash; but whichever flow is used, identity must come from a validated token, not a parameter.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="i-lessons">
+            <h2 id="i-lessons" class="section-title">What To <span class="highlight">Take Away</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-id-badge" aria-hidden="true"></i> Never derive identity from a client-supplied field. Validate the token and read the subject from it.</li>
+                    <li><i class="fa-solid fa-key" aria-hidden="true"></i> A token proves a login happened; it does not prove <em>who</em> unless you verify its claims.</li>
+                    <li><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Prefer authorization-code with PKCE over the implicit grant for browser apps.</li>
+                    <li><i class="fa-solid fa-rotate" aria-hidden="true"></i> Fixing a bug isn't done until you re-run the exploit and watch it fail.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i></div>
+                <h2>About the <span class="highlight">Lab</span></h2>
+                <p>Implicit is a Hack Smarter web and secure-code lab, published with the creator's permission. Hack Smarter runs realistic, engagement-style labs and training.</p>
+                <div class="hero-buttons">
+                    <a href="https://hacksmarter.org" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Visit Hack Smarter</a>
+                    <a href="https://owasp.org/www-project-web-security-testing-guide/" target="_blank" rel="noopener noreferrer" class="btn btn-outline">OWASP Testing Guide</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/writeups/" class="btn btn-outline btn-sm">Back to Write-ups</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>
