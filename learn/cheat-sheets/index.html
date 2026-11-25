@@ -6,7 +6,7 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <title>Cheat Sheets | White Rabbit Security</title>
-    <meta name="description" content="Quick references for Nmap and NetExec, and a first-pass checklist for practice machines.">
+    <meta name="description" content="Quick references for Nmap, NetExec, and Semgrep, and a first-pass checklist for practice machines.">
     <meta name="theme-color" content="#060b13">
     <link rel="canonical" href="https://whiterabbitsecurity.app/learn/cheat-sheets/">
     <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
@@ -15,14 +15,14 @@
     <meta property="og:site_name" content="White Rabbit Security">
     <meta property="og:locale" content="en_US">
     <meta property="og:title" content="Cheat Sheets | White Rabbit Security">
-    <meta property="og:description" content="Quick references for Nmap and NetExec, and a first-pass checklist for practice machines.">
+    <meta property="og:description" content="Quick references for Nmap, NetExec, and Semgrep, and a first-pass checklist for practice machines.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://whiterabbitsecurity.app/learn/cheat-sheets/">
     <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
     <meta property="og:image:alt" content="White Rabbit Security crest">
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Cheat Sheets | White Rabbit Security">
-    <meta name="twitter:description" content="Quick references for Nmap and NetExec, and a first-pass checklist for practice machines.">
+    <meta name="twitter:description" content="Quick references for Nmap, NetExec, and Semgrep, and a first-pass checklist for practice machines.">
     <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="/css/style.css">
@@ -83,6 +83,37 @@
                 <pre class="code-block"><code>nxc smb TARGET -u users.txt -p PASS --continue-on-success</code></pre>
                 <h3>Run a command over WinRM</h3>
                 <pre class="code-block"><code>nxc winrm TARGET -u USER -p PASS -x whoami</code></pre>
+            </div>
+        </section>
+        <section class="services" aria-labelledby="semgrep-heading">
+            <h2 id="semgrep-heading" class="section-title">Semgrep <span class="highlight">Quick Reference</span></h2>
+            <p class="lede">Semgrep finds bug patterns in source code. Run it on code you own or are authorized to review.</p>
+            <div class="service-card prose-card sheet">
+                <h3>Scan a project with the community rules</h3>
+                <pre class="code-block"><code>semgrep scan --config auto .</code></pre>
+                <h3>Run a specific ruleset from the registry</h3>
+                <pre class="code-block"><code>semgrep scan --config p/owasp-top-ten .
+semgrep scan --config p/secrets .</code></pre>
+                <h3>Run only your own rule file</h3>
+                <pre class="code-block"><code>semgrep scan --config ./myrules.yaml src/</code></pre>
+                <h3>A minimal rule: flag a dangerous call</h3>
+                <pre class="code-block"><code>rules:
+  - id: python-eval-use
+    languages: [python]
+    severity: WARNING
+    message: Avoid eval() on untrusted input.
+    pattern: eval(...)</code></pre>
+                <h3>Match a call but ignore a safe case</h3>
+                <pre class="code-block"><code>rules:
+  - id: subprocess-shell-true
+    languages: [python]
+    severity: ERROR
+    message: shell=True with untrusted input is command injection.
+    patterns:
+      - pattern: subprocess.$F(..., shell=True)
+      - pattern-not: subprocess.$F("...", shell=True)</code></pre>
+                <h3>Fail CI on findings, output SARIF</h3>
+                <pre class="code-block"><code>semgrep scan --config auto --error --sarif -o results.sarif .</code></pre>
             </div>
         </section>
         <section class="services" aria-labelledby="check-heading">
