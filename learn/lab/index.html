@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://challenges.cloudflare.com; style-src 'self' https://cdnjs.cloudflare.com; font-src 'self' https://cdnjs.cloudflare.com; img-src 'self' data:; connect-src 'self' https://formspree.io https://hacker-news.firebaseio.com; frame-src https://challenges.cloudflare.com; form-action 'self' https://formspree.io; base-uri 'self'; object-src 'none'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <title>Build a Home Lab | White Rabbit Security</title>
+    <meta name="description" content="How to build a safe, isolated security practice lab: choosing a hypervisor, an attacker VM, vulnerable targets, keeping it off your home network, and using snapshots.">
+    <meta name="theme-color" content="#060b13">
+    <link rel="canonical" href="https://whiterabbitsecurity.app/learn/lab/">
+    <link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/img/favicon-192.png" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta property="og:site_name" content="White Rabbit Security">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="Build a Home Lab | White Rabbit Security">
+    <meta property="og:description" content="How to build a safe, isolated security practice lab: a hypervisor, an attacker VM, vulnerable targets, keeping it off your home network, and snapshots.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://whiterabbitsecurity.app/learn/lab/">
+    <meta property="og:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <meta property="og:image:alt" content="White Rabbit Security crest">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Build a Home Lab | White Rabbit Security">
+    <meta name="twitter:description" content="How to build a safe, isolated security practice lab: a hypervisor, an attacker VM, vulnerable targets, keeping it off your home network, and snapshots.">
+    <meta name="twitter:image" content="https://whiterabbitsecurity.app/wrs.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <nav>
+        <a href="/" class="nav-logo">
+            <img src="/img/logo-mark.png" alt="White Rabbit Security" width="40" height="40">
+        </a>
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/services/">Services</a>
+            <a href="/about/">About</a>
+            <a href="/news/">News</a>
+            <a href="/contact/">Contact</a>
+            <a href="/learn/" class="active" aria-current="page">Learn</a>
+        </div>
+    </nav>
+
+    <main id="main" tabindex="-1">
+        <header class="hero">
+            <h1>Build a Home <span class="highlight">Lab</span></h1>
+            <p>The fastest way to improve is to have somewhere you are allowed to break things. A small, isolated lab on one computer is enough to practise nearly everything in the learning path.</p>
+            <p class="callout-critical">Keep your lab isolated from your home network and the internet. Only ever attack machines inside it, or targets you have written permission to test.</p>
+        </header>
+
+        <section class="services" aria-labelledby="lab-why">
+            <h2 id="lab-why" class="section-title">Why Build <span class="highlight">One</span></h2>
+            <div class="service-card prose-card">
+                <p>Online platforms are great for guided practice, but a local lab lets you work offline, break and rebuild targets freely, keep intentionally vulnerable machines you would never expose to the internet, and test tools and payloads without a timer or a connection. It is also the only way to practise some attacks &mdash; building your own small Active Directory, for example &mdash; end to end.</p>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="lab-build">
+            <h2 id="lab-build" class="section-title">The <span class="highlight">Build</span></h2>
+            <ol class="process-list">
+                <li>
+                    <h3>Pick a hypervisor</h3>
+                    <p>Software that runs virtual machines. On a laptop or desktop, VirtualBox (free) or VMware Workstation/Fusion is plenty. If you have a spare machine to dedicate, Proxmox gives you a always-on lab you reach over the network. Any one of them works &mdash; start with what installs easily.</p>
+                </li>
+                <li>
+                    <h3>Build an attacker VM</h3>
+                    <p>Install Kali or Parrot as your attack box and take a snapshot once it is set up and updated. This is where your tools live &mdash; scanners, a proxy, wordlists &mdash; so you never test from your host machine.</p>
+                </li>
+                <li>
+                    <h3>Put it on an isolated network</h3>
+                    <p>Give the lab its own virtual network (host-only, or an internal network) so the vulnerable machines cannot reach your home LAN or the internet. Vulnerable VMs are, by design, easy to compromise &mdash; they must never be exposed. Add internet only to the attacker VM, and only when you need it.</p>
+                </li>
+                <li>
+                    <h3>Add vulnerable targets</h3>
+                    <p>Download ready-made vulnerable machines (see below) and import them onto the isolated network. Mix Linux and Windows, web apps and services, so you practise the full enumeration-to-root loop against different stacks.</p>
+                </li>
+                <li>
+                    <h3>Snapshot everything</h3>
+                    <p>Snapshot each VM in a clean state before you attack it. When you break a box &mdash; and you will &mdash; roll back in seconds instead of rebuilding. Snapshot the attacker VM before big changes too.</p>
+                </li>
+                <li>
+                    <h3>Grow into a mini Active Directory</h3>
+                    <p>When you are ready for Windows and AD, stand up a Windows Server evaluation as a domain controller with one or two client VMs joined to it. It is the best way to practise the enumeration, credential, and escalation chains from the AD write-ups safely.</p>
+                </li>
+            </ol>
+        </section>
+
+        <section class="services" aria-labelledby="lab-tips">
+            <h2 id="lab-tips" class="section-title">Keep It <span class="highlight">Sane</span></h2>
+            <div class="service-card prose-card">
+                <ul class="spec-list">
+                    <li><i class="fa-solid fa-network-wired" aria-hidden="true"></i> <strong>Isolation first.</strong> Confirm a target cannot ping your router or the internet before you attack it.</li>
+                    <li><i class="fa-solid fa-memory" aria-hidden="true"></i> <strong>Mind resources.</strong> Run only the VMs you need. 2&ndash;4 GB RAM per target and a couple of cores is usually enough; start small.</li>
+                    <li><i class="fa-solid fa-camera" aria-hidden="true"></i> <strong>Snapshot before, not after.</strong> A clean baseline is what makes a lab reusable.</li>
+                    <li><i class="fa-solid fa-pen" aria-hidden="true"></i> <strong>Take notes here too.</strong> Treat lab boxes like real targets &mdash; log commands and findings as you go.</li>
+                    <li><i class="fa-solid fa-trash-can" aria-hidden="true"></i> <strong>Throw boxes away.</strong> Delete and re-import freely. Nothing in the lab is precious.</li>
+                    <li><i class="fa-solid fa-scale-balanced" aria-hidden="true"></i> <strong>Stay in scope.</strong> The lab is your scope. Do not point lab tooling at anything outside it.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="services" aria-labelledby="lab-targets">
+            <div class="uplink">
+                <div class="uplink-icon"><i class="fa-solid fa-download" aria-hidden="true"></i></div>
+                <h2>Where to Get <span class="highlight">Targets</span></h2>
+                <p>Download vulnerable machines to run locally, or practise on hosted targets when you don't want to manage VMs. Our <a href="/resources/">Resources</a> page lists more.</p>
+                <div class="hero-buttons">
+                    <a href="https://www.vulnhub.com" target="_blank" rel="noopener noreferrer" class="btn btn-primary">VulnHub (local VMs)</a>
+                    <a href="https://tryhackme.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline">TryHackMe (hosted)</a>
+                </div>
+            </div>
+        </section>
+        <section class="services">
+            <div class="service-actions"><a href="/learn/" class="btn btn-outline btn-sm">Back to Learn</a></div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <p>&copy; 2026 White Rabbit Security</p>
+        <p>Client information shared with us is treated as confidential. Do not send passwords or sensitive data through this site.</p>
+        <p class="footer-links"><a href="/contact/">Contact</a> <a href="/privacy/">Privacy</a> <a href="/.well-known/security.txt">security.txt</a></p>
+    </footer>
+</body>
+</html>
